@@ -35,6 +35,15 @@ importers:
       '@motionguard/core':
         specifier: workspace:*
         version: link:../core
+      '@motionguard/playwright':
+        specifier: workspace:*
+        version: link:../playwright
+      '@motionguard/reporter':
+        specifier: workspace:*
+        version: link:../reporter
+      playwright:
+        specifier: 1.61.1
+        version: 1.61.1
 
   packages/core: {}
 
