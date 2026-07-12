@@ -21,6 +21,7 @@
     "sourceMap": true,
     "paths": {
       "@motionguard/core": ["packages/core/src/index.ts"],
+      "@motionguard/playwright": ["packages/playwright/src/index.ts"],
       "@motionguard/reporter": ["packages/reporter/src/index.ts"],
       "@motionguard/cli": ["packages/cli/src/index.ts"]
     },
