@@ -1,0 +1,74 @@
+$ node scripts/qa-five-loops.mjs
+
+=== 1/5 Requirements ===
+Verified 8 governance files and mandatory controls.
+
+=== 2/5 Static quality ===
+$ biome format .
+packages/cli/src/config.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    108 108 │       schemaVersion: "0.1",
+    109 109 │       outputDir:
+    110     │ - ······root.outputDir·===·undefined·?·".motionguard"·:·stringValue(root.outputDir,·"config.outputDir"),
+        110 │ + ······root.outputDir·===·undefined
+        111 │ + ········?·".motionguard"
+        112 │ + ········:·stringValue(root.outputDir,·"config.outputDir"),
+    111 113 │       includeTrace: root.includeTrace === true,
+    112 114 │       scenarios,
+  
+
+packages/cli/src/index.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     40  40 │       if (!options.has(arg)) throw new TypeError(`Unknown option: ${arg}`);
+     41  41 │       const value = args[index + 1];
+     42     │ - ····if·(value·===·undefined·||·value.startsWith("-"))·throw·new·TypeError(`${arg}·requires·a·value.`);
+         42 │ + ····if·(value·===·undefined·||·value.startsWith("-"))
+         43 │ + ······throw·new·TypeError(`${arg}·requires·a·value.`);
+     43  44 │       index += 1;
+     44  45 │     }
+    ······· │ 
+     85  86 │       const format = parseFormat(optionValue(args, "-f", "--format"));
+     86  87 │       const config = await loadCliConfig(configPath);
+     87     │ - ····const·report·=·await·executeMotionGuard(config,·{·format,·...(outputDir·?·{·outputDir·}·:·{})·});
+         88 │ + ····const·report·=·await·executeMotionGuard(config,·{
+         89 │ + ······format,
+         90 │ + ······...(outputDir·?·{·outputDir·}·:·{}),
+         91 │ + ····});
+     88  92 │       io.stdout(
+     89  93 │         `${report.passed ? "PASS" : "FINDINGS"}: ${report.scenarioCount} scenario(s), ${report.findingCount} finding(s).`,
+    ······· │ 
+     97 101 │   
+     98 102 │   export { loadCliConfig, parseCliConfig } from "./config.js";
+     99     │ - export·type·{·MotionGuardCliAction,·MotionGuardCliConfig,·MotionGuardCliScenario·}·from·"./config.js";
+        103 │ + export·type·{
+        104 │ + ··MotionGuardCliAction,
+        105 │ + ··MotionGuardCliConfig,
+        106 │ + ··MotionGuardCliScenario,
+        107 │ + }·from·"./config.js";
+    100 108 │   export { executeMotionGuard } from "./runner.js";
+    101 109 │   
+  
+
+Checked 58 files in 19ms. No fixes applied.
+Found 2 errors.
+format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+
+[ELIFECYCLE] Command failed with exit code 1.
+file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25
+      else reject(new Error(`${command} ${args.join(" ")} exited with code ${String(code)}`));
+                  ^
+
+Error: pnpm format:check exited with code 1
+    at ChildProcess.<anonymous> (file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25:19)
+    at ChildProcess.emit (node:events:519:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:293:12)
+
+Node.js v22.23.1
+[ELIFECYCLE] Command failed with exit code 1.
