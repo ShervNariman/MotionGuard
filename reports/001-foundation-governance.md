@@ -1,5 +1,44 @@
 # MotionGuard Major-Step Report 001 — Foundation & Governance
 
-Status: Draft until PR validation and merge.
+**Objective:** Establish a production-grade repository, package architecture, and enforceable release process before introducing browser automation.
 
-This report will be finalized only after all five validation loops pass against the exact PR head.
+## Shipped
+
+- AI Operating System with a persistent Manager, QA Agent, and Senior Code Health Specialist.
+- Strict pnpm/TypeScript workspace with separate core, CLI, and reporter packages.
+- Dual ESM/CommonJS builds, stable export maps, executable CLI boundary, and exact dependency lock.
+- Five-loop QA command covering governance, formatting, lint, strict types, tests, experience contracts, builds, and package integrity.
+- GitHub CI, CodeQL, Dependabot, security policy, contribution standards, issue/PR templates, Cursor rules, and a reproducible dev container.
+
+## Five-loop evidence
+
+1. **Requirements:** Governance verifier confirms all mandatory roles, untrusted-input controls, reporting rules, and 1920×1080 asset standards.
+2. **Static quality:** Biome format/lint and strict TypeScript pass with no suppressions.
+3. **Automated behavior:** Eight tests pass across configuration validation, truthful CLI behavior, and sanitized report serialization.
+4. **Experience:** Core contracts explicitly include viewport, interaction, and reduced-motion dimensions; the browser-level adversity suite belongs to Milestone 2.
+5. **Release readiness:** Clean frozen install succeeds; all packages build and pass Publint plus Are The Types Wrong across ESM, CJS, Node, and bundler consumers. CI passed on commit `1de0fa7`; the report commit remains blocked until its own CI and CodeQL checks pass in PR #1.
+
+## Defects found and fixed
+
+- Install-script protection initially blocked esbuild; fixed by narrowly allowlisting only esbuild rather than disabling the control.
+- Package validation exposed incorrect ESM/CJS type resolution; fixed with separate import/require type conditions.
+- The CLI executed during import; fixed by separating the library API from the executable entry point.
+- Workspace tests and types could not resolve package source consistently; fixed with explicit aliases and paths.
+- Workflow review found outdated action majors and mutable tags; upgraded to current releases and pinned full commit SHAs.
+- pnpm/action-setup failed before project code ran; removed from the critical path in favor of Node Corepack and the repository's single pinned `packageManager` value.
+
+## Code-health status
+
+Package boundaries are acyclic, core remains browser/framework agnostic, page-derived data is treated as untrusted, and no critical or high-severity code-health finding remains. Local registry access prevented a live npm advisory query, so CodeQL and Dependabot are mandatory external security evidence rather than optional checks.
+
+## User value
+
+Contributors can now install, test, build, and review MotionGuard predictably. Future animation checks cannot merge without executable evidence, package compatibility, accessibility/reduced-motion consideration, and independent stability review.
+
+## X Marketing handoff
+
+**Truthful narrative:** MotionGuard now has a real open-source production foundation and an executable five-loop release gate; the browser stress engine is next and is not yet claimed as shipped. Use GitHub architecture, compatibility matrices, and green CI as proof. Product screenshots/video begin only when Milestone 2 has a real animated fixture; all final assets remain 1920×1080, with video at 60 fps.
+
+## Next step
+
+Build the deterministic browser stress engine and first four high-confidence rules: moving target, interrupted-state mismatch, exited-but-interactive element, and reduced-motion mismatch.
