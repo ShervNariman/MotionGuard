@@ -5,53 +5,74 @@ Verified 8 governance files and mandatory controls.
 
 === 2/5 Static quality ===
 $ biome format .
-packages/cli/src/index.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Checked 58 files in 20ms. No fixes applied.
 
-  × Formatter would have printed the following content:
+=== 2/5 Lint ===
+$ biome lint .
+packages/cli/src/index.ts:29:22 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
   
-     40  40 │       if (!options.has(arg)) throw new TypeError(`Unknown option: ${arg}`);
-     41  41 │       const value = args[index + 1];
-     42     │ - ····if·(value·===·undefined·||·value.startsWith("-"))·throw·new·TypeError(`${arg}·requires·a·value.`);
-         42 │ + ····if·(value·===·undefined·||·value.startsWith("-"))
-         43 │ + ······throw·new·TypeError(`${arg}·requires·a·value.`);
-     43  44 │       index += 1;
-     44  45 │     }
-    ······· │ 
-     85  86 │       const format = parseFormat(optionValue(args, "-f", "--format"));
-     86  87 │       const config = await loadCliConfig(configPath);
-     87     │ - ····const·report·=·await·executeMotionGuard(config,·{·format,·...(outputDir·?·{·outputDir·}·:·{})·});
-         88 │ + ····const·report·=·await·executeMotionGuard(config,·{
-         89 │ + ······format,
-         90 │ + ······...(outputDir·?·{·outputDir·}·:·{}),
-         91 │ + ····});
-     88  92 │       io.stdout(
-     89  93 │         `${report.passed ? "PASS" : "FINDINGS"}: ${report.scenarioCount} scenario(s), ${report.findingCount} finding(s).`,
-    ······· │ 
-     97 101 │   
-     98 102 │   export { loadCliConfig, parseCliConfig } from "./config.js";
-     99     │ - export·type·{·MotionGuardCliAction,·MotionGuardCliConfig,·MotionGuardCliScenario·}·from·"./config.js";
-        103 │ + export·type·{
-        104 │ + ··MotionGuardCliAction,
-        105 │ + ··MotionGuardCliConfig,
-        106 │ + ··MotionGuardCliScenario,
-        107 │ + }·from·"./config.js";
-    100 108 │   export { executeMotionGuard } from "./runner.js";
-    101 109 │   
+    27 │   if (indexes.length === 0) return undefined;
+    28 │   if (indexes.length > 1) throw new TypeError(`${long} may only be provided once.`);
+  > 29 │   const value = args[indexes[0]! + 1];
+       │                      ^^^^^^^^^^^
+    30 │   if (value === undefined || value.startsWith("-")) {
+    31 │     throw new TypeError(`${long} requires a value.`);
   
 
-Checked 58 files in 14ms. No fixes applied.
-Found 1 error.
-format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+packages/cli/src/index.ts:39:17 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Some errors were emitted while running checks.
+  ! Forbidden non-null assertion.
+  
+    37 │   const options = new Set(["-c", "--config", "-o", "--output", "-f", "--format"]);
+    38 │   for (let index = 1; index < args.length; index += 1) {
+  > 39 │     const arg = args[index]!;
+       │                 ^^^^^^^^^^^^
+    40 │     if (!options.has(arg)) throw new TypeError(`Unknown option: ${arg}`);
+    41 │     const value = args[index + 1];
   
 
-[ELIFECYCLE] Command failed with exit code 1.
+Checked 60 files in 44ms. No fixes applied.
+Found 2 warnings.
+
+=== 2/5 Type safety ===
+$ pnpm -r typecheck
+Scope: 4 of 5 workspace projects
+packages/core typecheck$ tsc --noEmit
+packages/core typecheck: Done
+packages/playwright typecheck$ tsc --noEmit
+packages/reporter typecheck$ tsc --noEmit
+packages/reporter typecheck: Done
+packages/playwright typecheck: Done
+packages/cli typecheck$ tsc --noEmit
+packages/cli typecheck: src/config.ts(3,52): error TS2307: Cannot find module '@motionguard/playwright' or its corresponding type declarations.
+packages/cli typecheck: src/config.ts(65,39): error TS4111: Property 'type' comes from an index signature, so it must be accessed with ['type'].
+packages/cli typecheck: src/config.ts(69,35): error TS4111: Property 'ms' comes from an index signature, so it must be accessed with ['ms'].
+packages/cli typecheck: src/config.ts(75,40): error TS4111: Property 'selector' comes from an index signature, so it must be accessed with ['selector'].
+packages/cli typecheck: src/config.ts(81,40): error TS4111: Property 'selector' comes from an index signature, so it must be accessed with ['selector'].
+packages/cli typecheck: src/config.ts(82,35): error TS4111: Property 'key' comes from an index signature, so it must be accessed with ['key'].
+packages/cli typecheck: src/config.ts(92,12): error TS4111: Property 'schemaVersion' comes from an index signature, so it must be accessed with ['schemaVersion'].
+packages/cli typecheck: src/config.ts(94,25): error TS4111: Property 'scenarios' comes from an index signature, so it must be accessed with ['scenarios'].
+packages/cli typecheck: src/config.ts(95,10): error TS4111: Property 'scenarios' comes from an index signature, so it must be accessed with ['scenarios'].
+packages/cli typecheck: src/config.ts(96,10): error TS4111: Property 'scenarios' comes from an index signature, so it must be accessed with ['scenarios'].
+packages/cli typecheck: src/config.ts(101,10): error TS4111: Property 'scenarios' comes from an index signature, so it must be accessed with ['scenarios'].
+packages/cli typecheck: src/config.ts(103,45): error TS4111: Property 'actions' comes from an index signature, so it must be accessed with ['actions'].
+packages/cli typecheck: src/config.ts(110,12): error TS4111: Property 'outputDir' comes from an index signature, so it must be accessed with ['outputDir'].
+packages/cli typecheck: src/config.ts(112,28): error TS4111: Property 'outputDir' comes from an index signature, so it must be accessed with ['outputDir'].
+packages/cli typecheck: src/config.ts(113,24): error TS4111: Property 'includeTrace' comes from an index signature, so it must be accessed with ['includeTrace'].
+packages/cli typecheck: src/runner.ts(4,35): error TS2307: Cannot find module '@motionguard/playwright' or its corresponding type declarations.
+packages/cli typecheck: src/runner.ts(64,23): error TS7031: Binding element 'page' implicitly has an 'any' type.
+packages/cli typecheck: Failed
+/home/runner/work/MotionGuard/MotionGuard/packages/cli:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @motionguard/cli@0.3.0 typecheck: `tsc --noEmit`
+Exit status 2
+[ELIFECYCLE] Command failed with exit code 2.
 file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25
       else reject(new Error(`${command} ${args.join(" ")} exited with code ${String(code)}`));
                   ^
 
-Error: pnpm format:check exited with code 1
+Error: pnpm typecheck exited with code 2
     at ChildProcess.<anonymous> (file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25:19)
     at ChildProcess.emit (node:events:519:28)
     at ChildProcess._handle.onexit (node:internal/child_process:293:12)
