@@ -1,24 +1,42 @@
+diff --git a/packages/playwright/src/record.ts b/packages/playwright/src/record.ts
+index 3fdf53f..eacb240 100644
 --- a/packages/playwright/src/record.ts
 +++ b/packages/playwright/src/record.ts
-@@ -139,6 +139,7 @@
-   throwIfAborted(options.signal);
- 
-   let context: BrowserContext | undefined;
-+  let capturedPage: Page | undefined;
-   let lifecycle: ReturnType<typeof lifecycleGuard> | undefined;
-   let guards: ReturnType<typeof executionGuards> | undefined;
-   let primaryError: unknown;
-@@ -188,6 +189,7 @@
+@@ -188,7 +188,8 @@ export async function recordMotionTrace(
      });
  
      const page = await Promise.race([context.newPage(), ...guards.promises]);
-+    capturedPage = page;
-     lifecycle = lifecycleGuard(options.browser, page);
+-    lifecycle = lifecycleGuard(options.browser, page);
++    const pageLifecycle = lifecycleGuard(options.browser, page);
++    lifecycle = pageLifecycle;
  
      const work = async (): Promise<MotionGuardTrace> => {
-@@ -272,7 +274,28 @@
+       try {
+@@ -198,6 +199,18 @@ export async function recordMotionTrace(
+         });
+       } catch (error) {
+         if (error instanceof MotionGuardPlaywrightError) throw error;
++        try {
++          await Promise.race([pageLifecycle.promise, delay(50, options.signal)]);
++        } catch (lifecycleError) {
++          throw lifecycleError;
++        }
++        if (!options.browser.isConnected()) {
++          throw new MotionGuardPlaywrightError(
++            "BROWSER_DISCONNECTED",
++            "The browser disconnected.",
++            error,
++          );
++        }
+         throw new MotionGuardPlaywrightError(
+           "NAVIGATION_FAILED",
+           `Navigation failed for ${scenario.url}.`,
+@@ -270,9 +283,24 @@ export async function recordMotionTrace(
+       });
+     };
  
-     result = await Promise.race([work(), lifecycle.promise, ...guards.promises]);
+-    result = await Promise.race([work(), lifecycle.promise, ...guards.promises]);
++    result = await Promise.race([work(), pageLifecycle.promise, ...guards.promises]);
    } catch (error) {
 -    primaryError = error;
 +    if (
@@ -32,12 +50,6 @@
 +      primaryError = new MotionGuardPlaywrightError(
 +        "BROWSER_DISCONNECTED",
 +        "The browser disconnected.",
-+        error,
-+      );
-+    } else if (capturedPage?.isClosed() === true) {
-+      primaryError = new MotionGuardPlaywrightError(
-+        "PAGE_CLOSED",
-+        "The inspected page closed unexpectedly.",
 +        error,
 +      );
 +    } else {
