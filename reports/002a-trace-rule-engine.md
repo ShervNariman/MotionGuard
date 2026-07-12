@@ -15,13 +15,13 @@
 
 1. **Requirements:** Core remains browser/framework agnostic and emits evidence rather than unsupported compliance claims.
 2. **Static quality:** Biome and strict TypeScript pass without suppressions.
-3. **Automated behavior:** 41 repository tests pass, including positive, negative, boundary, immutability, malformed input, stale-sample, reversal, false-positive, and five-repeat deterministic-output cases.
+3. **Automated behavior:** 42 repository tests pass, including positive, negative, boundary, immutability, malformed input, stale-sample, reversal, declared-state transition, false-positive, and five-repeat deterministic-output cases.
 4. **Experience:** Viewport, pointer, focusability, application state, motion intent, and reduced-motion evidence are explicit in the trace contract.
 5. **Release readiness:** Core builds as ESM/CommonJS and passes Publint plus Are The Types Wrong. Exact-head CI and CodeQL remain mandatory before merge.
 
 ## Defects found and fixed
 
-Review corrected stale target reuse, generic state mismatches being mislabeled as interruptions, `aria-hidden` being treated as visual invisibility, pointer movement being blamed on a stable target, mutable/unstable target identity metadata, locale-sensitive finding ordering, and an inefficient repeated trace scan.
+Review corrected stale target reuse, generic state mismatches being mislabeled as interruptions, `aria-hidden` being treated as visual invisibility, pointer movement being blamed on a stable target, mutable/unstable target identity metadata, locale-sensitive finding ordering, inefficient repeated trace scans, and opposite declared-state mismatch runs being incorrectly concatenated.
 
 ## Code-health status
 
