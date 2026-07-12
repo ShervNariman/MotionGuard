@@ -1,4 +1,26 @@
-import type { MotionGuardConfig, MotionGuardScenario } from "./types.js";
+import type {
+  MotionGuardConfig,
+  MotionGuardInteraction,
+  MotionGuardScenario,
+  MotionGuardViewport,
+} from "./types.js";
+
+const interactionKinds = new Set<MotionGuardInteraction["kind"]>([
+  "click",
+  "keyboard",
+  "pointer",
+  "programmatic",
+]);
+const reducedMotionValues = new Set<MotionGuardScenario["reducedMotion"]>([
+  "reduce",
+  "no-preference",
+]);
+
+function assertPositiveFinite(value: number, label: string): void {
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new TypeError(`${label} must be a positive finite number.`);
+  }
+}
 
 function assertPositiveInteger(value: number, label: string): void {
   if (!Number.isInteger(value) || value <= 0) {
@@ -13,11 +35,39 @@ function validateScenario(scenario: MotionGuardScenario, index: number): void {
   if (scenario.name.trim().length === 0) {
     throw new TypeError(`scenarios[${String(index)}].name must not be empty.`);
   }
+  if (!interactionKinds.has(scenario.interaction.kind)) {
+    throw new TypeError(`scenarios[${String(index)}].interaction.kind is unsupported.`);
+  }
   if (scenario.interaction.target.trim().length === 0) {
     throw new TypeError(`scenarios[${String(index)}].interaction.target must not be empty.`);
   }
   assertPositiveInteger(scenario.viewport.width, `scenarios[${String(index)}].viewport.width`);
   assertPositiveInteger(scenario.viewport.height, `scenarios[${String(index)}].viewport.height`);
+  if (scenario.viewport.deviceScaleFactor !== undefined) {
+    assertPositiveFinite(
+      scenario.viewport.deviceScaleFactor,
+      `scenarios[${String(index)}].viewport.deviceScaleFactor`,
+    );
+  }
+  if (!reducedMotionValues.has(scenario.reducedMotion)) {
+    throw new TypeError(`scenarios[${String(index)}].reducedMotion is unsupported.`);
+  }
+}
+
+function freezeViewport(viewport: MotionGuardViewport): MotionGuardViewport {
+  return Object.freeze({ ...viewport });
+}
+
+function freezeInteraction(interaction: MotionGuardInteraction): MotionGuardInteraction {
+  return Object.freeze({ ...interaction });
+}
+
+function freezeScenario(scenario: MotionGuardScenario): MotionGuardScenario {
+  return Object.freeze({
+    ...scenario,
+    interaction: freezeInteraction(scenario.interaction),
+    viewport: freezeViewport(scenario.viewport),
+  });
 }
 
 export function defineMotionGuardConfig(config: MotionGuardConfig): MotionGuardConfig {
@@ -40,6 +90,6 @@ export function defineMotionGuardConfig(config: MotionGuardConfig): MotionGuardC
 
   return Object.freeze({
     baseUrl: url.toString(),
-    scenarios: Object.freeze(config.scenarios.map((scenario) => Object.freeze(scenario))),
+    scenarios: Object.freeze(config.scenarios.map(freezeScenario)),
   });
 }
