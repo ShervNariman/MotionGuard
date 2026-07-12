@@ -11,6 +11,7 @@ const loops = [
     command: "node",
     args: ["scripts/verify-experience-contract.mjs"],
   },
+  { name: "5/5 Cleanup safety", command: "node", args: ["scripts/verify-clean.mjs"] },
   { name: "5/5 Build", command: "pnpm", args: ["build"] },
   { name: "5/5 Package integrity", command: "pnpm", args: ["package:check"] },
 ];
