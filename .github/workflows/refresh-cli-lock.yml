@@ -32,11 +32,10 @@ jobs:
           status=$?
           set -e
           if [ "$status" -ne 0 ]; then
-            mkdir -p .qa
-            tail -n 240 /tmp/motionguard-cli-qa.log > .qa/cli-failure.log
+            tail -n 240 /tmp/motionguard-cli-qa.log > reports/003-cli-qa-failure.txt
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add .qa/cli-failure.log
+            git add reports/003-cli-qa-failure.txt
             git commit -m "record CLI QA failure evidence"
             git push origin HEAD:agent/cli-reporting-qa
             exit "$status"
