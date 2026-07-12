@@ -4,20 +4,19 @@
    throwIfAborted(options.signal);
  
    let context: BrowserContext | undefined;
-+  let page: Page | undefined;
++  let capturedPage: Page | undefined;
    let lifecycle: ReturnType<typeof lifecycleGuard> | undefined;
    let guards: ReturnType<typeof executionGuards> | undefined;
    let primaryError: unknown;
-@@ -187,7 +188,7 @@
-       await route.continue();
+@@ -188,6 +189,7 @@
      });
  
--    const page = await Promise.race([context.newPage(), ...guards.promises]);
-+    page = await Promise.race([context.newPage(), ...guards.promises]);
+     const page = await Promise.race([context.newPage(), ...guards.promises]);
++    capturedPage = page;
      lifecycle = lifecycleGuard(options.browser, page);
  
      const work = async (): Promise<MotionGuardTrace> => {
-@@ -272,7 +273,28 @@
+@@ -272,7 +274,28 @@
  
      result = await Promise.race([work(), lifecycle.promise, ...guards.promises]);
    } catch (error) {
@@ -35,7 +34,7 @@
 +        "The browser disconnected.",
 +        error,
 +      );
-+    } else if (page?.isClosed() === true) {
++    } else if (capturedPage?.isClosed() === true) {
 +      primaryError = new MotionGuardPlaywrightError(
 +        "PAGE_CLOSED",
 +        "The inspected page closed unexpectedly.",
