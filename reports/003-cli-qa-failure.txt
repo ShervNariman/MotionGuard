@@ -1,14 +1,134 @@
-$ node scripts/qa-five-loops.mjs
+         81 │ + ··········selector:·stringValue(action.selector,·`${label}[${index}].selector`),
+     82  82 │             key: stringValue(action["key"], `${label}[${index}].key`),
+     83  83 │           });
+  
 
-=== 1/5 Requirements ===
-Verified 8 governance files and mandatory controls.
+packages/cli/src/config.ts:82:35 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-=== 2/5 Static quality ===
-$ biome format .
-Checked 58 files in 20ms. No fixes applied.
+  i The computed expression can be simplified without the use of a string literal.
+  
+    80 │           type,
+    81 │           selector: stringValue(action["selector"], `${label}[${index}].selector`),
+  > 82 │           key: stringValue(action["key"], `${label}[${index}].key`),
+       │                                   ^^^^^
+    83 │         });
+    84 │       }
+  
+  i Unsafe fix: Use a literal key instead.
+  
+     80  80 │             type,
+     81  81 │             selector: stringValue(action["selector"], `${label}[${index}].selector`),
+     82     │ - ··········key:·stringValue(action["key"],·`${label}[${index}].key`),
+         82 │ + ··········key:·stringValue(action.key,·`${label}[${index}].key`),
+     83  83 │           });
+     84  84 │         }
+  
 
-=== 2/5 Lint ===
-$ biome lint .
+packages/cli/src/config.ts:92:12 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    90 │ export function parseCliConfig(value: unknown): MotionGuardCliConfig {
+    91 │   const root = objectValue(value, "config");
+  > 92 │   if (root["schemaVersion"] !== "0.1") fail('config.schemaVersion must be "0.1".');
+       │            ^^^^^^^^^^^^^^^
+    93 │   const rawScenarios = root["scenarios"];
+    94 │   if (
+  
+  i Unsafe fix: Use a literal key instead.
+  
+     90  90 │   export function parseCliConfig(value: unknown): MotionGuardCliConfig {
+     91  91 │     const root = objectValue(value, "config");
+     92     │ - ··if·(root["schemaVersion"]·!==·"0.1")·fail('config.schemaVersion·must·be·"0.1".');
+         92 │ + ··if·(root.schemaVersion·!==·"0.1")·fail('config.schemaVersion·must·be·"0.1".');
+     93  93 │     const rawScenarios = root["scenarios"];
+     94  94 │     if (
+  
+
+packages/cli/src/config.ts:93:29 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    91 │   const root = objectValue(value, "config");
+    92 │   if (root["schemaVersion"] !== "0.1") fail('config.schemaVersion must be "0.1".');
+  > 93 │   const rawScenarios = root["scenarios"];
+       │                             ^^^^^^^^^^^
+    94 │   if (
+    95 │     !Array.isArray(rawScenarios) ||
+  
+  i Unsafe fix: Use a literal key instead.
+  
+     91  91 │     const root = objectValue(value, "config");
+     92  92 │     if (root["schemaVersion"] !== "0.1") fail('config.schemaVersion must be "0.1".');
+     93     │ - ··const·rawScenarios·=·root["scenarios"];
+         93 │ + ··const·rawScenarios·=·root.scenarios;
+     94  94 │     if (
+     95  95 │       !Array.isArray(rawScenarios) ||
+  
+
+packages/cli/src/config.ts:104:45 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    102 │     rawScenarios.map((raw, index) => {
+    103 │       const scenario = objectValue(raw, `config.scenarios[${index}]`);
+  > 104 │       const actions = parseActions(scenario["actions"], `config.scenarios[${index}].actions`);
+        │                                             ^^^^^^^^^
+    105 │       return Object.freeze({ ...scenario, actions }) as MotionGuardCliScenario;
+    106 │     }),
+  
+  i Unsafe fix: Use a literal key instead.
+  
+    102 102 │       rawScenarios.map((raw, index) => {
+    103 103 │         const scenario = objectValue(raw, `config.scenarios[${index}]`);
+    104     │ - ······const·actions·=·parseActions(scenario["actions"],·`config.scenarios[${index}].actions`);
+        104 │ + ······const·actions·=·parseActions(scenario.actions,·`config.scenarios[${index}].actions`);
+    105 105 │         return Object.freeze({ ...scenario, actions }) as MotionGuardCliScenario;
+    106 106 │       }),
+  
+
+packages/cli/src/config.ts:108:26 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    106 │     }),
+    107 │   );
+  > 108 │   const outputDir = root["outputDir"];
+        │                          ^^^^^^^^^^^
+    109 │   return Object.freeze({
+    110 │     schemaVersion: "0.1",
+  
+  i Unsafe fix: Use a literal key instead.
+  
+    106 106 │       }),
+    107 107 │     );
+    108     │ - ··const·outputDir·=·root["outputDir"];
+        108 │ + ··const·outputDir·=·root.outputDir;
+    109 109 │     return Object.freeze({
+    110 110 │       schemaVersion: "0.1",
+  
+
+packages/cli/src/config.ts:113:24 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    111 │     outputDir:
+    112 │       outputDir === undefined ? ".motionguard" : stringValue(outputDir, "config.outputDir"),
+  > 113 │     includeTrace: root["includeTrace"] === true,
+        │                        ^^^^^^^^^^^^^^
+    114 │     scenarios,
+    115 │   });
+  
+  i Unsafe fix: Use a literal key instead.
+  
+    111 111 │       outputDir:
+    112 112 │         outputDir === undefined ? ".motionguard" : stringValue(outputDir, "config.outputDir"),
+    113     │ - ····includeTrace:·root["includeTrace"]·===·true,
+        113 │ + ····includeTrace:·root.includeTrace·===·true,
+    114 114 │       scenarios,
+    115 115 │     });
+  
+
 packages/cli/src/index.ts:29:22 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ! Forbidden non-null assertion.
@@ -33,8 +153,9 @@ packages/cli/src/index.ts:39:17 lint/style/noNonNullAssertion ━━━━━━
     41 │     const value = args[index + 1];
   
 
-Checked 60 files in 44ms. No fixes applied.
+Checked 60 files in 56ms. No fixes applied.
 Found 2 warnings.
+Found 10 infos.
 
 === 2/5 Type safety ===
 $ pnpm -r typecheck
@@ -46,30 +167,71 @@ packages/reporter typecheck$ tsc --noEmit
 packages/reporter typecheck: Done
 packages/playwright typecheck: Done
 packages/cli typecheck$ tsc --noEmit
-packages/cli typecheck: src/config.ts(65,39): error TS4111: Property 'type' comes from an index signature, so it must be accessed with ['type'].
-packages/cli typecheck: src/config.ts(69,35): error TS4111: Property 'ms' comes from an index signature, so it must be accessed with ['ms'].
-packages/cli typecheck: src/config.ts(75,40): error TS4111: Property 'selector' comes from an index signature, so it must be accessed with ['selector'].
-packages/cli typecheck: src/config.ts(81,40): error TS4111: Property 'selector' comes from an index signature, so it must be accessed with ['selector'].
-packages/cli typecheck: src/config.ts(82,35): error TS4111: Property 'key' comes from an index signature, so it must be accessed with ['key'].
-packages/cli typecheck: src/config.ts(92,12): error TS4111: Property 'schemaVersion' comes from an index signature, so it must be accessed with ['schemaVersion'].
-packages/cli typecheck: src/config.ts(94,25): error TS4111: Property 'scenarios' comes from an index signature, so it must be accessed with ['scenarios'].
-packages/cli typecheck: src/config.ts(95,10): error TS4111: Property 'scenarios' comes from an index signature, so it must be accessed with ['scenarios'].
-packages/cli typecheck: src/config.ts(96,10): error TS4111: Property 'scenarios' comes from an index signature, so it must be accessed with ['scenarios'].
-packages/cli typecheck: src/config.ts(101,10): error TS4111: Property 'scenarios' comes from an index signature, so it must be accessed with ['scenarios'].
-packages/cli typecheck: src/config.ts(103,45): error TS4111: Property 'actions' comes from an index signature, so it must be accessed with ['actions'].
-packages/cli typecheck: src/config.ts(110,12): error TS4111: Property 'outputDir' comes from an index signature, so it must be accessed with ['outputDir'].
-packages/cli typecheck: src/config.ts(112,28): error TS4111: Property 'outputDir' comes from an index signature, so it must be accessed with ['outputDir'].
-packages/cli typecheck: src/config.ts(113,24): error TS4111: Property 'includeTrace' comes from an index signature, so it must be accessed with ['includeTrace'].
-packages/cli typecheck: Failed
+packages/cli typecheck: Done
+
+=== 3/5 Automated behavior ===
+$ pnpm -r test
+Scope: 4 of 5 workspace projects
+packages/core test$ vitest run
+packages/core test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/core[39m
+packages/core test:  [32m✓[39m test/config.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+packages/core test:  [32m✓[39m test/rules/state-mismatch.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+packages/core test:  [32m✓[39m test/trace.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+packages/core test:  [32m✓[39m test/rules/engine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+packages/core test:  [32m✓[39m test/rules/moving-target.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+packages/core test:  [32m✓[39m test/rules/reduced-motion.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+packages/core test:  [32m✓[39m test/rules/exited-interactive.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+packages/core test: [2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+packages/core test: [2m      Tests [22m [1m[32m39 passed[39m[22m[90m (39)[39m
+packages/core test: [2m   Start at [22m 03:18:30
+packages/core test: [2m   Duration [22m 664ms[2m (transform 301ms, setup 0ms, import 543ms, tests 74ms, environment 1ms)[22m
+packages/core test: Done
+packages/playwright test$ vitest run --config vitest.config.ts
+packages/reporter test$ vitest run
+packages/reporter test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/reporter[39m
+packages/playwright test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/playwright[39m
+packages/reporter test:  [32m✓[39m test/reporter.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+packages/reporter test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/reporter test: [2m      Tests [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+packages/reporter test: [2m   Start at [22m 03:18:31
+packages/reporter test: [2m   Duration [22m 250ms[2m (transform 50ms, setup 0ms, import 66ms, tests 5ms, environment 0ms)[22m
+packages/playwright test:  [32m✓[39m test/unit/config.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+packages/playwright test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/playwright test: [2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+packages/playwright test: [2m   Start at [22m 03:18:31
+packages/playwright test: [2m   Duration [22m 243ms[2m (transform 53ms, setup 0ms, import 71ms, tests 10ms, environment 0ms)[22m
+packages/reporter test: Done
+packages/playwright test: Done
+packages/cli test$ vitest run
+packages/cli test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/cli[39m
+packages/cli test:  [31m❯[39m test/cli.test.ts [2m([22m[2m0 test[22m[2m)[22m
+packages/cli test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Suites 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+packages/cli test: [41m[1m FAIL [22m[49m test/cli.test.ts[2m [ test/cli.test.ts ][22m
+packages/cli test: [31m[1mError[22m: Failed to resolve entry for package "@motionguard/playwright". The package may have incorrect main/module/exports specified in its package.json.[39m
+packages/cli test: [36m [2m❯[22m src/runner.ts:[2m4:1[22m[39m
+packages/cli test:     [90m  2|[39m [35mimport[39m { isAbsolute[33m,[39m relative[33m,[39m resolve[33m,[39m sep } [35mfrom[39m [32m"node:path"[39m[33m;[39m
+packages/cli test:     [90m  3|[39m [35mimport[39m { evaluateMotionGuardTrace } [35mfrom[39m [32m"@motionguard/core"[39m[33m;[39m
+packages/cli test:     [90m  4|[39m [35mimport[39m { recordMotionTrace } [35mfrom[39m [32m"@motionguard/playwright"[39m[33m;[39m
+packages/cli test:     [90m   |[39m [31m^[39m
+packages/cli test:     [90m  5|[39m [35mimport[39m {
+packages/cli test:     [90m  6|[39m   defineMotionGuardReport[33m,[39m
+packages/cli test: [90m [2m❯[22m src/index.ts:[2m5:1[22m[39m
+packages/cli test: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+packages/cli test: [2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+packages/cli test: [2m      Tests [22m [2mno tests[22m
+packages/cli test: [2m   Start at [22m 03:18:31
+packages/cli test: [2m   Duration [22m 280ms[2m (transform 108ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)[22m
+packages/cli test: ::error file=/home/runner/work/MotionGuard/MotionGuard/packages/cli/src/runner.ts,title=test/cli.test.ts,line=4,column=1::Error: Failed to resolve entry for package "@motionguard/playwright". The package may have incorrect main/module/exports specified in its package.json.%0A ❯ src/runner.ts:4:1%0A ❯ src/index.ts:5:1%0A%0A
+packages/cli test: Failed
 /home/runner/work/MotionGuard/MotionGuard/packages/cli:
-[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @motionguard/cli@0.3.0 typecheck: `tsc --noEmit`
-Exit status 2
-[ELIFECYCLE] Command failed with exit code 2.
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @motionguard/cli@0.3.0 test: `vitest run`
+Exit status 1
+[ELIFECYCLE] Test failed. See above for more details.
 file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25
       else reject(new Error(`${command} ${args.join(" ")} exited with code ${String(code)}`));
                   ^
 
-Error: pnpm typecheck exited with code 2
+Error: pnpm test exited with code 1
     at ChildProcess.<anonymous> (file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25:19)
     at ChildProcess.emit (node:events:519:28)
     at ChildProcess._handle.onexit (node:internal/child_process:293:12)
