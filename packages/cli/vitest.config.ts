@@ -5,6 +5,10 @@ export default defineConfig({
   resolve: {
     alias: {
       "@motionguard/core": fileURLToPath(new URL("../core/src/index.ts", import.meta.url)),
+      "@motionguard/playwright": fileURLToPath(
+        new URL("../playwright/src/index.ts", import.meta.url),
+      ),
+      "@motionguard/reporter": fileURLToPath(new URL("../reporter/src/index.ts", import.meta.url)),
     },
   },
 });
