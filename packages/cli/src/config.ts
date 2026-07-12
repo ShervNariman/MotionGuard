@@ -62,24 +62,24 @@ function parseActions(value: unknown, label: string): readonly MotionGuardCliAct
   return Object.freeze(
     value.map((raw, index) => {
       const action = objectValue(raw, `${label}[${index}]`);
-      const type = stringValue(action.type, `${label}[${index}].type`);
+      const type = stringValue(action["type"], `${label}[${index}].type`);
       if (type === "wait") {
         return Object.freeze({
           type,
-          ms: integerValue(action.ms, `${label}[${index}].ms`, 1, MAX_WAIT_MS),
+          ms: integerValue(action["ms"], `${label}[${index}].ms`, 1, MAX_WAIT_MS),
         });
       }
       if (type === "click" || type === "hover") {
         return Object.freeze({
           type,
-          selector: stringValue(action.selector, `${label}[${index}].selector`),
+          selector: stringValue(action["selector"], `${label}[${index}].selector`),
         });
       }
       if (type === "press") {
         return Object.freeze({
           type,
-          selector: stringValue(action.selector, `${label}[${index}].selector`),
-          key: stringValue(action.key, `${label}[${index}].key`),
+          selector: stringValue(action["selector"], `${label}[${index}].selector`),
+          key: stringValue(action["key"], `${label}[${index}].key`),
         });
       }
       return fail(`${label}[${index}].type is unsupported.`);
@@ -89,28 +89,28 @@ function parseActions(value: unknown, label: string): readonly MotionGuardCliAct
 
 export function parseCliConfig(value: unknown): MotionGuardCliConfig {
   const root = objectValue(value, "config");
-  if (root.schemaVersion !== "0.1") fail('config.schemaVersion must be "0.1".');
+  if (root["schemaVersion"] !== "0.1") fail('config.schemaVersion must be "0.1".');
+  const rawScenarios = root["scenarios"];
   if (
-    !Array.isArray(root.scenarios) ||
-    root.scenarios.length === 0 ||
-    root.scenarios.length > MAX_SCENARIOS
+    !Array.isArray(rawScenarios) ||
+    rawScenarios.length === 0 ||
+    rawScenarios.length > MAX_SCENARIOS
   ) {
     fail(`config.scenarios must contain 1–${MAX_SCENARIOS} entries.`);
   }
   const scenarios = Object.freeze(
-    root.scenarios.map((raw, index) => {
+    rawScenarios.map((raw, index) => {
       const scenario = objectValue(raw, `config.scenarios[${index}]`);
-      const actions = parseActions(scenario.actions, `config.scenarios[${index}].actions`);
+      const actions = parseActions(scenario["actions"], `config.scenarios[${index}].actions`);
       return Object.freeze({ ...scenario, actions }) as MotionGuardCliScenario;
     }),
   );
+  const outputDir = root["outputDir"];
   return Object.freeze({
     schemaVersion: "0.1",
     outputDir:
-      root.outputDir === undefined
-        ? ".motionguard"
-        : stringValue(root.outputDir, "config.outputDir"),
-    includeTrace: root.includeTrace === true,
+      outputDir === undefined ? ".motionguard" : stringValue(outputDir, "config.outputDir"),
+    includeTrace: root["includeTrace"] === true,
     scenarios,
   });
 }
