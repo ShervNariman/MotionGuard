@@ -31,7 +31,7 @@ jobs:
           base64 --decode /tmp/playwright-adapter.tar.gz.b64 > /tmp/playwright-adapter.tar.gz
           echo "3a7bcfe2f3f18da4b1433bfa89cb0405519c1322ae47f2a13d766345983e3a56  /tmp/playwright-adapter.tar.gz" | sha256sum --check
           tar -xzf /tmp/playwright-adapter.tar.gz
-          git apply .bootstrap/playwright-lifecycle.patch
+          python .bootstrap/apply-playwright-lifecycle-fix.py
       - run: pnpm install --lockfile-only
       - run: pnpm install --frozen-lockfile
       - run: pnpm qa
