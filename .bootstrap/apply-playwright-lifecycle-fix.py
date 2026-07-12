@@ -21,6 +21,10 @@ replacements = [
         '''      } catch (error) {\n        if (error instanceof MotionGuardPlaywrightError) throw error;\n        await Promise.race([pageLifecycle.promise, delay(50, options.signal)]);\n        if (!options.browser.isConnected()) {\n          throw new MotionGuardPlaywrightError(\n            "BROWSER_DISCONNECTED",\n            "The browser disconnected.",\n            error,\n          );\n        }\n        throw new MotionGuardPlaywrightError(\n          "NAVIGATION_FAILED",\n''',
     ),
     (
+        '''      sampler = (async () => {\n        while (!stopSampling) {\n          await delay(scenario.sampleIntervalMs, options.signal);\n          if (stopSampling) break;\n          await collect();\n        }\n      })();\n\n      await options.run?.({ page });\n''',
+        '''      sampler = (async () => {\n        while (!stopSampling) {\n          await delay(scenario.sampleIntervalMs, options.signal);\n          if (stopSampling) break;\n          await collect();\n        }\n      })();\n      void sampler.catch(() => undefined);\n\n      await options.run?.({ page });\n''',
+    ),
+    (
         '''    result = await Promise.race([work(), lifecycle.promise, ...guards.promises]);\n  } catch (error) {\n    primaryError = error;\n  }\n''',
         '''    result = await Promise.race([work(), pageLifecycle.promise, ...guards.promises]);\n  } catch (error) {\n    if (\n      error instanceof MotionGuardPlaywrightError &&\n      (error.code === "BROWSER_DISCONNECTED" ||\n        error.code === "PAGE_CLOSED" ||\n        error.code === "PAGE_CRASHED")\n    ) {\n      primaryError = error;\n    } else if (!options.browser.isConnected()) {\n      primaryError = new MotionGuardPlaywrightError(\n        "BROWSER_DISCONNECTED",\n        "The browser disconnected.",\n        error,\n      );\n    } else {\n      primaryError = error;\n    }\n  }\n''',
     ),
