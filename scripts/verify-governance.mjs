@@ -18,4 +18,18 @@ for (const phrase of ["five loops", "untrusted", "1920×1080"]) {
     throw new Error(`AGENTS.md is missing required governance phrase: ${phrase}`);
   }
 }
+
+const manager = await readFile(".ai-os/roles/manager.md", "utf8");
+for (const phrase of [
+  "production-ready Version 5",
+  "Version 5 terminal gate",
+  "five-loop gate",
+  "Senior Code Health Specialist",
+  "exact final Version 5 head",
+]) {
+  if (!manager.toLowerCase().includes(phrase.toLowerCase())) {
+    throw new Error(`Manager governance is missing required terminal-control phrase: ${phrase}`);
+  }
+}
+
 console.log(`Verified ${requiredFiles.length} governance files and mandatory controls.`);
