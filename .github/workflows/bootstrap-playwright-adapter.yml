@@ -34,7 +34,22 @@ jobs:
           python .bootstrap/apply-playwright-lifecycle-fix.py
       - run: pnpm install --lockfile-only
       - run: pnpm install --frozen-lockfile
-      - run: pnpm qa
+      - name: Run repository QA and preserve failures
+        run: |
+          set +e
+          pnpm qa > /tmp/motionguard-qa.log 2>&1
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            tail -n 220 /tmp/motionguard-qa.log > .bootstrap/playwright-adapter-trigger.txt
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .bootstrap/playwright-adapter-trigger.txt
+            git commit -m "record Playwright adapter QA failure evidence"
+            git push origin HEAD:agent/playwright-adapter
+            exit "$status"
+          fi
+          cat /tmp/motionguard-qa.log
       - run: pnpm --filter @motionguard/playwright exec playwright install --with-deps chromium
       - name: Run browser E2E and preserve failures
         run: |
