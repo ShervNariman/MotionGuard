@@ -39,7 +39,8 @@ function validateCheckArgs(args: readonly string[]): void {
     const arg = args[index]!;
     if (!options.has(arg)) throw new TypeError(`Unknown option: ${arg}`);
     const value = args[index + 1];
-    if (value === undefined || value.startsWith("-")) throw new TypeError(`${arg} requires a value.`);
+    if (value === undefined || value.startsWith("-"))
+      throw new TypeError(`${arg} requires a value.`);
     index += 1;
   }
 }
@@ -84,7 +85,10 @@ export async function runCli(args: readonly string[], io: CliIo = defaultIo): Pr
     const outputDir = optionValue(args, "-o", "--output");
     const format = parseFormat(optionValue(args, "-f", "--format"));
     const config = await loadCliConfig(configPath);
-    const report = await executeMotionGuard(config, { format, ...(outputDir ? { outputDir } : {}) });
+    const report = await executeMotionGuard(config, {
+      format,
+      ...(outputDir ? { outputDir } : {}),
+    });
     io.stdout(
       `${report.passed ? "PASS" : "FINDINGS"}: ${report.scenarioCount} scenario(s), ${report.findingCount} finding(s).`,
     );
@@ -96,5 +100,9 @@ export async function runCli(args: readonly string[], io: CliIo = defaultIo): Pr
 }
 
 export { loadCliConfig, parseCliConfig } from "./config.js";
-export type { MotionGuardCliAction, MotionGuardCliConfig, MotionGuardCliScenario } from "./config.js";
+export type {
+  MotionGuardCliAction,
+  MotionGuardCliConfig,
+  MotionGuardCliScenario,
+} from "./config.js";
 export { executeMotionGuard } from "./runner.js";
