@@ -88,11 +88,15 @@ export const interruptedStateMismatchRule: MotionGuardRule = Object.freeze({
           first.frame.atMs,
           context.options.stateMismatch.maximumObservationDelayMs,
         );
-        if (durationMs < context.options.stateMismatch.minimumDurationMs || interruption === null) {
+        const declared = first.target.state.declared;
+        if (
+          durationMs < context.options.stateMismatch.minimumDurationMs ||
+          interruption === null ||
+          declared !== interruption.second.stateValue
+        ) {
           run = [];
           return;
         }
-        const declared = first.target.state.declared;
         findings.push(
           createFinding({
             scenarioId: trace.scenarioId,
@@ -122,8 +126,18 @@ export const interruptedStateMismatchRule: MotionGuardRule = Object.freeze({
       };
 
       for (const entry of entries) {
-        if (isMismatch(entry, context.options.stateMismatch.opacityThreshold)) run.push(entry);
-        else flush();
+        if (!isMismatch(entry, context.options.stateMismatch.opacityThreshold)) {
+          flush();
+          continue;
+        }
+        const previous = run.at(-1);
+        if (
+          previous !== undefined &&
+          previous.target.state.declared !== entry.target.state.declared
+        ) {
+          flush();
+        }
+        run.push(entry);
       }
       flush();
     }
