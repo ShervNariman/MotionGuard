@@ -1,58 +1,47 @@
-$ node scripts/qa-five-loops.mjs
+$ vitest run --config vitest.e2e.config.ts
 
-=== 1/5 Requirements ===
-Verified 8 governance files and mandatory controls.
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/playwright[39m
 
-=== 2/5 Static quality ===
-$ biome format .
-packages/playwright/src/record.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(node:3984) PromiseRejectionHandledWarning: Promise rejection was handled asynchronously (rejection id: 6)
+(Use `node --trace-warnings ...` to show where the warning was created)
+ [32m✓[39m test/e2e/record.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 6306[2mms[22m[39m
+     [33m[2m✓[22m[39m detects a moving interaction target across five isolated runs [33m 1810[2mms[22m[39m
+     [33m[2m✓[22m[39m detects an interrupted state mismatch [33m 370[2mms[22m[39m
+     [33m[2m✓[22m[39m reports a Chromium page crash and releases the context [33m 1343[2mms[22m[39m
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Errors [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+[31m[1m
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.[22m[39m
 
-  × Formatter would have printed the following content:
-  
-     64  64 │         if (browser.isConnected()) {
-     65  65 │           rejectWith(
-     66     │ - ··········new·MotionGuardPlaywrightError(
-     67     │ - ············"PAGE_CLOSED",
-     68     │ - ············"The·inspected·page·closed·unexpectedly.",
-     69     │ - ··········),
-         66 │ + ··········new·MotionGuardPlaywrightError("PAGE_CLOSED",·"The·inspected·page·closed·unexpectedly."),
-     70  67 │           );
-     71  68 │           return;
-     72  69 │         }
-     73  70 │         rejectWith(
-     74     │ - ········new·MotionGuardPlaywrightError(
-     75     │ - ··········"BROWSER_DISCONNECTED",
-     76     │ - ··········"The·browser·disconnected.",
-     77     │ - ········),
-         71 │ + ········new·MotionGuardPlaywrightError("BROWSER_DISCONNECTED",·"The·browser·disconnected."),
-     78  72 │         );
-     79  73 │       }, 25);
-     80  74 │     };
-     81  75 │     const onDisconnected = (): void =>
-     82     │ - ····rejectWith(
-     83     │ - ······new·MotionGuardPlaywrightError("BROWSER_DISCONNECTED",·"The·browser·disconnected."),
-     84     │ - ····);
-         76 │ + ····rejectWith(new·MotionGuardPlaywrightError("BROWSER_DISCONNECTED",·"The·browser·disconnected."));
-     85  77 │     page.once("crash", onCrash);
-     86  78 │     page.once("close", onClose);
-  
+[31m⎯⎯⎯⎯[39m[1m[41m Unhandled Rejection [49m[22m[31m⎯⎯⎯⎯⎯[39m
+[31m[1mError[22m: page.evaluate: Target page, context or browser has been closed[39m
+[36m [2m❯[22m samplePage src/page-recorder.ts:[2m178:26[22m[39m
+    [90m176|[39m   scenario[33m:[39m [33mNormalizedPlaywrightScenario[39m[33m,[39m
+    [90m177|[39m )[33m:[39m [33mPromise[39m[33m<[39m[33mRawPageSample[39m[33m>[39m {
+    [90m178|[39m   [35mconst[39m raw [33m=[39m [35mawait[39m page[33m.[39m[34mevaluate[39m(
+    [90m   |[39m                          [31m^[39m
+    [90m179|[39m     ({
+    [90m180|[39m       propertyKey[33m,[39m
+[90m [2m❯[22m collect src/record.ts:[2m243:30[22m[39m
+[90m [2m❯[22m src/record.ts:[2m276:17[22m[39m
 
-Checked 56 files in 16ms. No fixes applied.
-Found 1 error.
-format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22m[39m
+[31m[1mSerialized Error:[22m[39m [90m{ log: [] }[39m
+[31mThis error originated in "[1mtest/e2e/record.test.ts[22m" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.[39m
+[31mThe latest test that might've caused the error is "[1mreports an unexpected page close and releases the context[22m". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.[39m
+[31m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m
 
-  × Some errors were emitted while running checks.
-  
 
-[ELIFECYCLE] Command failed with exit code 1.
-file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25
-      else reject(new Error(`${command} ${args.join(" ")} exited with code ${String(code)}`));
-                  ^
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m13 passed[39m[22m[90m (13)[39m
+[2m     Errors [22m [1m[31m1 error[39m[22m
+[2m   Start at [22m 02:22:00
+[2m   Duration [22m 7.02s[2m (transform 155ms, setup 0ms, import 586ms, tests 6.31s, environment 0ms)[22m
 
-Error: pnpm format:check exited with code 1
-    at ChildProcess.<anonymous> (file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25:19)
-    at ChildProcess.emit (node:events:519:28)
-    at ChildProcess._handle.onexit (node:internal/child_process:293:12)
 
-Node.js v22.23.1
-[ELIFECYCLE] Command failed with exit code 1.
+::error file=/home/runner/work/MotionGuard/MotionGuard/packages/playwright/src/page-recorder.ts,title=Unhandled error,line=178,column=26::Error: page.evaluate: Target page, context or browser has been closed%0A ❯ samplePage src/page-recorder.ts:178:26%0A ❯ collect src/record.ts:243:30%0A ❯ src/record.ts:276:17%0A%0A⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%0ASerialized Error: { log: [] }%0AThis error originated in "test/e2e/record.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.%0AThe latest test that might've caused the error is "reports an unexpected page close and releases the context". It might mean one of the following:%0A- The error was thrown, while Vitest was running this test.%0A- If the error occurred after the test had been completed, this was the last documented test before it was thrown.%0A
+/home/runner/work/MotionGuard/MotionGuard/packages/playwright:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @motionguard/playwright@0.0.0 test:e2e: `vitest run --config vitest.e2e.config.ts`
+Exit status 1
