@@ -1,5 +1,5 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { resolve, sep } from "node:path";
+import { isAbsolute, relative, resolve, sep } from "node:path";
 import { evaluateMotionGuardTrace } from "@motionguard/core";
 import { recordMotionTrace } from "@motionguard/playwright";
 import {
@@ -10,27 +10,24 @@ import {
   type MotionGuardReport,
   type MotionGuardScenarioReport,
 } from "@motionguard/reporter";
-import { chromium } from "playwright";
+import { chromium, type Page } from "playwright";
 import type { MotionGuardCliAction, MotionGuardCliConfig } from "./config.js";
 
 export type MotionGuardOutputFormat = "all" | "json" | "junit" | "html";
 
 function safeOutputDir(value: string, cwd: string): string {
-  const output = resolve(cwd, value);
-  const relative = output.slice(resolve(cwd).length);
-  if (relative === "" || (!relative.startsWith(sep) && output !== resolve(cwd))) {
-    throw new TypeError("outputDir must resolve inside the current working directory.");
-  }
-  if (relative.split(sep).includes("..")) {
-    throw new TypeError("outputDir must not escape the current working directory.");
+  const root = resolve(cwd);
+  const output = resolve(root, value);
+  const relativePath = relative(root, output);
+  const escapes =
+    relativePath === ".." || relativePath.startsWith(`..${sep}`) || isAbsolute(relativePath);
+  if (relativePath.length === 0 || escapes) {
+    throw new TypeError("outputDir must be a child directory of the current working directory.");
   }
   return output;
 }
 
-async function runActions(
-  actions: readonly MotionGuardCliAction[],
-  page: Parameters<NonNullable<Parameters<typeof recordMotionTrace>[0]["run"]>>[0]["page"],
-): Promise<void> {
+async function runActions(actions: readonly MotionGuardCliAction[], page: Page): Promise<void> {
   for (const action of actions) {
     if (action.type === "wait") {
       await page.waitForTimeout(action.ms);
@@ -92,10 +89,14 @@ export async function executeMotionGuard(
   const format = options.format ?? "all";
   const writes: Promise<void>[] = [];
   if (format === "all" || format === "json") {
-    writes.push(writeFile(resolve(outputDir, "report.json"), `${serializeJsonReport(report)}\n`, "utf8"));
+    writes.push(
+      writeFile(resolve(outputDir, "report.json"), `${serializeJsonReport(report)}\n`, "utf8"),
+    );
   }
   if (format === "all" || format === "junit") {
-    writes.push(writeFile(resolve(outputDir, "report.junit.xml"), serializeJUnitReport(report), "utf8"));
+    writes.push(
+      writeFile(resolve(outputDir, "report.junit.xml"), serializeJUnitReport(report), "utf8"),
+    );
   }
   if (format === "all" || format === "html") {
     writes.push(writeFile(resolve(outputDir, "report.html"), renderHtmlReport(report), "utf8"));
