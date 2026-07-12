@@ -12,14 +12,17 @@ const directories: string[] = [];
 beforeEach(async () => {
   server = createServer((_request, response) => {
     response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-    response.end(`<!doctype html><html><body><button data-target>Stable target</button></body></html>`);
+    response.end(
+      `<!doctype html><html><body><button data-target>Stable target</button></body></html>`,
+    );
   });
   await new Promise<void>((resolve, reject) => {
     server.once("error", reject);
     server.listen(0, "127.0.0.1", () => resolve());
   });
   const address = server.address();
-  if (address === null || typeof address === "string") throw new Error("Could not resolve fixture port.");
+  if (address === null || typeof address === "string")
+    throw new Error("Could not resolve fixture port.");
   baseUrl = `http://127.0.0.1:${String(address.port)}`;
 });
 
