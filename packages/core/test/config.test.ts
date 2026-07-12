@@ -19,6 +19,9 @@ describe("defineMotionGuardConfig", () => {
     expect(config.baseUrl).toBe("http://localhost:3000/");
     expect(Object.isFrozen(config)).toBe(true);
     expect(Object.isFrozen(config.scenarios)).toBe(true);
+    expect(Object.isFrozen(config.scenarios[0])).toBe(true);
+    expect(Object.isFrozen(config.scenarios[0]?.interaction)).toBe(true);
+    expect(Object.isFrozen(config.scenarios[0]?.viewport)).toBe(true);
   });
 
   it.each([
@@ -30,6 +33,22 @@ describe("defineMotionGuardConfig", () => {
     ],
   ])("rejects %s", (_name, config) => {
     expect(() => defineMotionGuardConfig(config)).toThrow(TypeError);
+  });
+
+  it.each([
+    ["interaction kind", { ...validScenario, interaction: { kind: "drag", target: "#target" } }],
+    ["reduced motion", { ...validScenario, reducedMotion: "sometimes" }],
+    [
+      "device scale factor",
+      { ...validScenario, viewport: { width: 1280, height: 720, deviceScaleFactor: 0 } },
+    ],
+  ])("rejects an invalid %s", (_name, scenario) => {
+    expect(() =>
+      defineMotionGuardConfig({
+        baseUrl: "https://example.com",
+        scenarios: [scenario as typeof validScenario],
+      }),
+    ).toThrow(TypeError);
   });
 
   it("rejects invalid viewport dimensions", () => {
