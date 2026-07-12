@@ -35,7 +35,13 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm qa
       - run: pnpm --filter @motionguard/playwright exec playwright install --with-deps chromium
-      - run: pnpm --filter @motionguard/playwright test:e2e
+      - name: Run browser E2E with concise failure output
+        run: |
+          if ! pnpm --filter @motionguard/playwright test:e2e > /tmp/motionguard-e2e.log 2>&1; then
+            tail -n 180 /tmp/motionguard-e2e.log
+            exit 1
+          fi
+          cat /tmp/motionguard-e2e.log
       - name: Commit validated adapter
         run: |
           git config user.name "github-actions[bot]"
