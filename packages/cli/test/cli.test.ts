@@ -30,6 +30,16 @@ describe("runCli", () => {
     expect(io.stderr).toHaveBeenCalledWith("Unknown command: unknown");
   });
 
+  it.each([
+    [["check", "--wat"], "Unknown option: --wat"],
+    [["check", "--format", "json", "--format", "html"], "--format may only be provided once."],
+    [["init", "one.json", "two.json"], "Unknown argument: two.json"],
+  ] as const)("rejects ambiguous arguments", async (args, message) => {
+    const io = createIo();
+    await expect(runCli(args, io)).resolves.toBe(2);
+    expect(io.stderr).toHaveBeenCalledWith(message);
+  });
+
   it("creates a starter config without overwriting files", async () => {
     const directory = await mkdtemp(join(tmpdir(), "motionguard-cli-"));
     directories.push(directory);
@@ -70,6 +80,10 @@ describe("parseCliConfig", () => {
     ["schema", { ...base, schemaVersion: "1" }],
     ["actions", { ...base, scenarios: [{ ...base.scenarios[0], actions: [{ type: "eval" }] }] }],
     ["empty scenarios", { ...base, scenarios: [] }],
+    [
+      "unbounded wait",
+      { ...base, scenarios: [{ ...base.scenarios[0], actions: [{ type: "wait", ms: 60_001 }] }] },
+    ],
   ])("rejects invalid %s", (_name, value) => {
     expect(() => parseCliConfig(value)).toThrow(TypeError);
   });
