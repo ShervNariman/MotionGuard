@@ -29,6 +29,7 @@
     "clean": "node ../../scripts/clean.mjs dist coverage",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
     "test:coverage": "vitest run --coverage",
     "package:check": "publint && attw --pack"
   },
