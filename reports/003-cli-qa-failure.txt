@@ -27,7 +27,7 @@ packages/cli/test/e2e/runner.test.ts format ━━━━━━━━━━━━
     24 27 │   });
   
 
-Checked 60 files in 20ms. No fixes applied.
+Checked 60 files in 19ms. No fixes applied.
 Found 1 error.
 format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
