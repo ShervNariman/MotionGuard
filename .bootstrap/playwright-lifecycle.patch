@@ -2,7 +2,7 @@ diff --git a/packages/playwright/src/record.ts b/packages/playwright/src/record.
 index 3fdf53f..fca1413 100644
 --- a/packages/playwright/src/record.ts
 +++ b/packages/playwright/src/record.ts
-@@ -46,17 +46,36 @@ function lifecycleGuard(
+@@ -46,17 +46,39 @@ function lifecycleGuard(
    dispose: () => void;
  }> {
    let rejectPromise: ((error: Error) => void) | undefined;
@@ -26,16 +26,20 @@ index 3fdf53f..fca1413 100644
 +    rejectWith(new MotionGuardPlaywrightError("PAGE_CRASHED", "The inspected page crashed."));
 +  const onClose = (): void => {
 +    closeTimer = setTimeout(() => {
++      if (browser.isConnected()) {
++        rejectWith(
++          new MotionGuardPlaywrightError(
++            "PAGE_CLOSED",
++            "The inspected page closed unexpectedly.",
++          ),
++        );
++        return;
++      }
 +      rejectWith(
-+        browser.isConnected()
-+          ? new MotionGuardPlaywrightError(
-+              "PAGE_CLOSED",
-+              "The inspected page closed unexpectedly.",
-+            )
-+          : new MotionGuardPlaywrightError(
-+              "BROWSER_DISCONNECTED",
-+              "The browser disconnected.",
-+            ),
++        new MotionGuardPlaywrightError(
++          "BROWSER_DISCONNECTED",
++          "The browser disconnected.",
++        ),
 +      );
 +    }, 25);
 +  };
@@ -45,7 +49,7 @@ index 3fdf53f..fca1413 100644
        new MotionGuardPlaywrightError("BROWSER_DISCONNECTED", "The browser disconnected."),
      );
    page.once("crash", onCrash);
-@@ -65,6 +84,7 @@ function lifecycleGuard(
+@@ -65,6 +87,7 @@ function lifecycleGuard(
    return Object.freeze({
      promise,
      dispose: () => {
@@ -53,7 +57,7 @@ index 3fdf53f..fca1413 100644
        page.off("crash", onCrash);
        page.off("close", onClose);
        browser.off("disconnected", onDisconnected);
-@@ -188,7 +208,8 @@ export async function recordMotionTrace(
+@@ -188,7 +211,8 @@ export async function recordMotionTrace(
      });
  
      const page = await Promise.race([context.newPage(), ...guards.promises]);
@@ -63,15 +67,11 @@ index 3fdf53f..fca1413 100644
  
      const work = async (): Promise<MotionGuardTrace> => {
        try {
-@@ -198,6 +219,18 @@ export async function recordMotionTrace(
+@@ -198,6 +222,14 @@ export async function recordMotionTrace(
          });
        } catch (error) {
          if (error instanceof MotionGuardPlaywrightError) throw error;
-+        try {
-+          await Promise.race([pageLifecycle.promise, delay(50, options.signal)]);
-+        } catch (lifecycleError) {
-+          throw lifecycleError;
-+        }
++        await Promise.race([pageLifecycle.promise, delay(50, options.signal)]);
 +        if (!options.browser.isConnected()) {
 +          throw new MotionGuardPlaywrightError(
 +            "BROWSER_DISCONNECTED",
@@ -82,7 +82,7 @@ index 3fdf53f..fca1413 100644
          throw new MotionGuardPlaywrightError(
            "NAVIGATION_FAILED",
            `Navigation failed for ${scenario.url}.`,
-@@ -270,9 +303,24 @@ export async function recordMotionTrace(
+@@ -270,9 +302,24 @@ export async function recordMotionTrace(
        });
      };
  
