@@ -1,45 +1,237 @@
-$ node scripts/qa-five-loops.mjs
 
-=== 1/5 Requirements ===
-Verified 8 governance files and mandatory controls.
-
-=== 2/5 Static quality ===
-$ biome format .
-packages/cli/test/e2e/runner.test.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Formatter would have printed the following content:
+  i The computed expression can be simplified without the use of a string literal.
   
-    13 13 │     server = createServer((_request, response) => {
-    14 14 │       response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-    15    │ - ····response.end(`<!doctype·html><html><body><button·data-target>Stable·target</button></body></html>`);
-       15 │ + ····response.end(
-       16 │ + ······`<!doctype·html><html><body><button·data-target>Stable·target</button></body></html>`,
-       17 │ + ····);
-    16 18 │     });
-    17 19 │     await new Promise<void>((resolve, reject) => {
-    ····· │ 
-    20 22 │     });
-    21 23 │     const address = server.address();
-    22    │ - ··if·(address·===·null·||·typeof·address·===·"string")·throw·new·Error("Could·not·resolve·fixture·port.");
-       24 │ + ··if·(address·===·null·||·typeof·address·===·"string")
-       25 │ + ····throw·new·Error("Could·not·resolve·fixture·port.");
-    23 26 │     baseUrl = `http://127.0.0.1:${String(address.port)}`;
-    24 27 │   });
+    79 │         return Object.freeze({
+    80 │           type,
+  > 81 │           selector: stringValue(action["selector"], `${label}[${index}].selector`),
+       │                                        ^^^^^^^^^^
+    82 │           key: stringValue(action["key"], `${label}[${index}].key`),
+    83 │         });
+  
+  i Unsafe fix: Use a literal key instead.
+  
+     79  79 │           return Object.freeze({
+     80  80 │             type,
+     81     │ - ··········selector:·stringValue(action["selector"],·`${label}[${index}].selector`),
+         81 │ + ··········selector:·stringValue(action.selector,·`${label}[${index}].selector`),
+     82  82 │             key: stringValue(action["key"], `${label}[${index}].key`),
+     83  83 │           });
   
 
-Checked 60 files in 30ms. No fixes applied.
-Found 1 error.
-format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+packages/cli/src/config.ts:82:35 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Some errors were emitted while running checks.
+  i The computed expression can be simplified without the use of a string literal.
+  
+    80 │           type,
+    81 │           selector: stringValue(action["selector"], `${label}[${index}].selector`),
+  > 82 │           key: stringValue(action["key"], `${label}[${index}].key`),
+       │                                   ^^^^^
+    83 │         });
+    84 │       }
+  
+  i Unsafe fix: Use a literal key instead.
+  
+     80  80 │             type,
+     81  81 │             selector: stringValue(action["selector"], `${label}[${index}].selector`),
+     82     │ - ··········key:·stringValue(action["key"],·`${label}[${index}].key`),
+         82 │ + ··········key:·stringValue(action.key,·`${label}[${index}].key`),
+     83  83 │           });
+     84  84 │         }
   
 
-[ELIFECYCLE] Command failed with exit code 1.
+packages/cli/src/config.ts:92:12 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    90 │ export function parseCliConfig(value: unknown): MotionGuardCliConfig {
+    91 │   const root = objectValue(value, "config");
+  > 92 │   if (root["schemaVersion"] !== "0.1") fail('config.schemaVersion must be "0.1".');
+       │            ^^^^^^^^^^^^^^^
+    93 │   const rawScenarios = root["scenarios"];
+    94 │   if (
+  
+  i Unsafe fix: Use a literal key instead.
+  
+     90  90 │   export function parseCliConfig(value: unknown): MotionGuardCliConfig {
+     91  91 │     const root = objectValue(value, "config");
+     92     │ - ··if·(root["schemaVersion"]·!==·"0.1")·fail('config.schemaVersion·must·be·"0.1".');
+         92 │ + ··if·(root.schemaVersion·!==·"0.1")·fail('config.schemaVersion·must·be·"0.1".');
+     93  93 │     const rawScenarios = root["scenarios"];
+     94  94 │     if (
+  
+
+packages/cli/src/config.ts:93:29 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    91 │   const root = objectValue(value, "config");
+    92 │   if (root["schemaVersion"] !== "0.1") fail('config.schemaVersion must be "0.1".');
+  > 93 │   const rawScenarios = root["scenarios"];
+       │                             ^^^^^^^^^^^
+    94 │   if (
+    95 │     !Array.isArray(rawScenarios) ||
+  
+  i Unsafe fix: Use a literal key instead.
+  
+     91  91 │     const root = objectValue(value, "config");
+     92  92 │     if (root["schemaVersion"] !== "0.1") fail('config.schemaVersion must be "0.1".');
+     93     │ - ··const·rawScenarios·=·root["scenarios"];
+         93 │ + ··const·rawScenarios·=·root.scenarios;
+     94  94 │     if (
+     95  95 │       !Array.isArray(rawScenarios) ||
+  
+
+packages/cli/src/config.ts:104:45 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    102 │     rawScenarios.map((raw, index) => {
+    103 │       const scenario = objectValue(raw, `config.scenarios[${index}]`);
+  > 104 │       const actions = parseActions(scenario["actions"], `config.scenarios[${index}].actions`);
+        │                                             ^^^^^^^^^
+    105 │       return Object.freeze({ ...scenario, actions }) as MotionGuardCliScenario;
+    106 │     }),
+  
+  i Unsafe fix: Use a literal key instead.
+  
+    102 102 │       rawScenarios.map((raw, index) => {
+    103 103 │         const scenario = objectValue(raw, `config.scenarios[${index}]`);
+    104     │ - ······const·actions·=·parseActions(scenario["actions"],·`config.scenarios[${index}].actions`);
+        104 │ + ······const·actions·=·parseActions(scenario.actions,·`config.scenarios[${index}].actions`);
+    105 105 │         return Object.freeze({ ...scenario, actions }) as MotionGuardCliScenario;
+    106 106 │       }),
+  
+
+packages/cli/src/config.ts:108:26 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    106 │     }),
+    107 │   );
+  > 108 │   const outputDir = root["outputDir"];
+        │                          ^^^^^^^^^^^
+    109 │   return Object.freeze({
+    110 │     schemaVersion: "0.1",
+  
+  i Unsafe fix: Use a literal key instead.
+  
+    106 106 │       }),
+    107 107 │     );
+    108     │ - ··const·outputDir·=·root["outputDir"];
+        108 │ + ··const·outputDir·=·root.outputDir;
+    109 109 │     return Object.freeze({
+    110 110 │       schemaVersion: "0.1",
+  
+
+packages/cli/src/config.ts:113:24 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    111 │     outputDir:
+    112 │       outputDir === undefined ? ".motionguard" : stringValue(outputDir, "config.outputDir"),
+  > 113 │     includeTrace: root["includeTrace"] === true,
+        │                        ^^^^^^^^^^^^^^
+    114 │     scenarios,
+    115 │   });
+  
+  i Unsafe fix: Use a literal key instead.
+  
+    111 111 │       outputDir:
+    112 112 │         outputDir === undefined ? ".motionguard" : stringValue(outputDir, "config.outputDir"),
+    113     │ - ····includeTrace:·root["includeTrace"]·===·true,
+        113 │ + ····includeTrace:·root.includeTrace·===·true,
+    114 114 │       scenarios,
+    115 115 │     });
+  
+
+Checked 62 files in 56ms. No fixes applied.
+Found 10 infos.
+
+=== 2/5 Type safety ===
+$ pnpm -r typecheck
+Scope: 4 of 5 workspace projects
+packages/core typecheck$ tsc --noEmit
+packages/core typecheck: Done
+packages/playwright typecheck$ tsc --noEmit
+packages/reporter typecheck$ tsc --noEmit
+packages/reporter typecheck: Done
+packages/playwright typecheck: Done
+packages/cli typecheck$ tsc --noEmit
+packages/cli typecheck: Done
+
+=== 3/5 Automated behavior ===
+$ pnpm -r test
+Scope: 4 of 5 workspace projects
+packages/core test$ vitest run
+packages/core test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/core[39m
+packages/core test:  [32m✓[39m test/config.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+packages/core test:  [32m✓[39m test/rules/state-mismatch.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+packages/core test:  [32m✓[39m test/trace.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+packages/core test:  [32m✓[39m test/rules/moving-target.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+packages/core test:  [32m✓[39m test/rules/engine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+packages/core test:  [32m✓[39m test/rules/reduced-motion.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+packages/core test:  [32m✓[39m test/rules/exited-interactive.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+packages/core test: [2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+packages/core test: [2m      Tests [22m [1m[32m39 passed[39m[22m[90m (39)[39m
+packages/core test: [2m   Start at [22m 03:27:46
+packages/core test: [2m   Duration [22m 666ms[2m (transform 324ms, setup 0ms, import 556ms, tests 73ms, environment 1ms)[22m
+packages/core test: Done
+packages/playwright test$ vitest run --config vitest.config.ts
+packages/reporter test$ vitest run
+packages/reporter test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/reporter[39m
+packages/playwright test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/playwright[39m
+packages/reporter test:  [32m✓[39m test/reporter.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+packages/playwright test:  [32m✓[39m test/unit/config.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+packages/reporter test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/reporter test: [2m      Tests [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+packages/reporter test: [2m   Start at [22m 03:27:47
+packages/reporter test: [2m   Duration [22m 239ms[2m (transform 40ms, setup 0ms, import 56ms, tests 5ms, environment 0ms)[22m
+packages/playwright test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/playwright test: [2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+packages/playwright test: [2m   Start at [22m 03:27:47
+packages/playwright test: [2m   Duration [22m 240ms[2m (transform 44ms, setup 0ms, import 63ms, tests 9ms, environment 0ms)[22m
+packages/reporter test: Done
+packages/playwright test: Done
+packages/cli test$ vitest run
+packages/cli test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/cli[39m
+packages/cli test:  [31m❯[39m test/e2e/runner.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 41[2mms[22m[39m
+packages/cli test: [31m     [31m×[31m runs Chromium capture and writes JSON, JUnit, and HTML reports[39m[32m 36[2mms[22m[39m
+packages/cli test:  [32m✓[39m test/cli.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+packages/cli test: [31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+packages/cli test: [41m[1m FAIL [22m[49m test/e2e/runner.test.ts[2m > [22mexecuteMotionGuard[2m > [22mruns Chromium capture and writes JSON, JUnit, and HTML reports
+packages/cli test: [31m[1mError[22m: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-linux64/chrome-headless-shell
+packages/cli test: ╔════════════════════════════════════════════════════════════╗
+packages/cli test: ║ Looks like Playwright was just installed or updated.       ║
+packages/cli test: ║ Please run the following command to download new browsers: ║
+packages/cli test: ║                                                            ║
+packages/cli test: ║     pnpm exec playwright install                           ║
+packages/cli test: ║                                                            ║
+packages/cli test: ║ <3 Playwright Team                                         ║
+packages/cli test: ╚════════════════════════════════════════════════════════════╝[39m
+packages/cli test: [36m [2m❯[22m executeMotionGuard src/runner.ts:[2m55:34[22m[39m
+packages/cli test:     [90m 53|[39m   [35mconst[39m cwd [33m=[39m options[33m.[39mcwd [33m??[39m process[33m.[39m[34mcwd[39m()[33m;[39m
+packages/cli test:     [90m 54|[39m   const outputDir = safeOutputDir(options.outputDir ?? config.outputDi…
+packages/cli test:     [90m 55|[39m   [35mconst[39m browser [33m=[39m [35mawait[39m chromium[33m.[39m[34mlaunch[39m({ headless[33m:[39m [35mtrue[39m })[33m;[39m
+packages/cli test:     [90m   |[39m                                  [31m^[39m
+packages/cli test:     [90m 56|[39m   [35mconst[39m scenarios[33m:[39m [33mMotionGuardScenarioReport[39m[] [33m=[39m [][33m;[39m
+packages/cli test:     [90m 57|[39m
+packages/cli test: [90m [2m❯[22m test/e2e/runner.test.ts:[2m40:26[22m[39m
+packages/cli test: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+packages/cli test: [2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+packages/cli test: [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m11 passed[39m[22m[90m (12)[39m
+packages/cli test: [2m   Start at [22m 03:27:48
+packages/cli test: [2m   Duration [22m 887ms[2m (transform 329ms, setup 0ms, import 1.38s, tests 60ms, environment 0ms)[22m
+packages/cli test: ::error file=/home/runner/work/MotionGuard/MotionGuard/packages/cli/src/runner.ts,title=test/e2e/runner.test.ts > executeMotionGuard > runs Chromium capture and writes JSON%2C JUnit%2C and HTML reports,line=55,column=34::Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-linux64/chrome-headless-shell%0A╔════════════════════════════════════════════════════════════╗%0A║ Looks like Playwright was just installed or updated.       ║%0A║ Please run the following command to download new browsers: ║%0A║                                                            ║%0A║     pnpm exec playwright install                           ║%0A║                                                            ║%0A║ <3 Playwright Team                                         ║%0A╚════════════════════════════════════════════════════════════╝%0A ❯ executeMotionGuard src/runner.ts:55:34%0A ❯ test/e2e/runner.test.ts:40:26%0A%0A⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%0ASerialized Error: { log: [] }%0A
+packages/cli test: Failed
+/home/runner/work/MotionGuard/MotionGuard/packages/cli:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @motionguard/cli@0.3.0 test: `vitest run`
+Exit status 1
+[ELIFECYCLE] Test failed. See above for more details.
 file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25
       else reject(new Error(`${command} ${args.join(" ")} exited with code ${String(code)}`));
                   ^
 
-Error: pnpm format:check exited with code 1
+Error: pnpm test exited with code 1
     at ChildProcess.<anonymous> (file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25:19)
     at ChildProcess.emit (node:events:519:28)
     at ChildProcess._handle.onexit (node:internal/child_process:293:12)
