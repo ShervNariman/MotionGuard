@@ -107,7 +107,9 @@ export function parseCliConfig(value: unknown): MotionGuardCliConfig {
   return Object.freeze({
     schemaVersion: "0.1",
     outputDir:
-      root.outputDir === undefined ? ".motionguard" : stringValue(root.outputDir, "config.outputDir"),
+      root.outputDir === undefined
+        ? ".motionguard"
+        : stringValue(root.outputDir, "config.outputDir"),
     includeTrace: root.includeTrace === true,
     scenarios,
   });
