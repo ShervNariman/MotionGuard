@@ -5,20 +5,6 @@ Verified 8 governance files and mandatory controls.
 
 === 2/5 Static quality ===
 $ biome format .
-packages/cli/src/config.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Formatter would have printed the following content:
-  
-    108 108 │       schemaVersion: "0.1",
-    109 109 │       outputDir:
-    110     │ - ······root.outputDir·===·undefined·?·".motionguard"·:·stringValue(root.outputDir,·"config.outputDir"),
-        110 │ + ······root.outputDir·===·undefined
-        111 │ + ········?·".motionguard"
-        112 │ + ········:·stringValue(root.outputDir,·"config.outputDir"),
-    111 113 │       includeTrace: root.includeTrace === true,
-    112 114 │       scenarios,
-  
-
 packages/cli/src/index.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Formatter would have printed the following content:
@@ -53,8 +39,8 @@ packages/cli/src/index.ts format ━━━━━━━━━━━━━━━�
     101 109 │   
   
 
-Checked 58 files in 19ms. No fixes applied.
-Found 2 errors.
+Checked 58 files in 14ms. No fixes applied.
+Found 1 error.
 format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Some errors were emitted while running checks.
