@@ -26,7 +26,9 @@ function optionValue(args: readonly string[], short: string, long: string): stri
     .filter((index) => index >= 0);
   if (indexes.length === 0) return undefined;
   if (indexes.length > 1) throw new TypeError(`${long} may only be provided once.`);
-  const value = args[indexes[0]! + 1];
+  const index = indexes[0];
+  if (index === undefined) return undefined;
+  const value = args[index + 1];
   if (value === undefined || value.startsWith("-")) {
     throw new TypeError(`${long} requires a value.`);
   }
@@ -36,7 +38,8 @@ function optionValue(args: readonly string[], short: string, long: string): stri
 function validateCheckArgs(args: readonly string[]): void {
   const options = new Set(["-c", "--config", "-o", "--output", "-f", "--format"]);
   for (let index = 1; index < args.length; index += 1) {
-    const arg = args[index]!;
+    const arg = args[index];
+    if (arg === undefined) throw new TypeError("Missing CLI argument.");
     if (!options.has(arg)) throw new TypeError(`Unknown option: ${arg}`);
     const value = args[index + 1];
     if (value === undefined || value.startsWith("-"))
