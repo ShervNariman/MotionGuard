@@ -16,13 +16,14 @@ viewport changes, focus movement, page lifecycle changes, and reduced-motion pre
 
 MotionGuard is in active production development. The current repository establishes the strict
 workspace, public package boundaries, deterministic five-loop QA gate, CI, security policy, and
-agent governance used for all subsequent implementation.
+agent governance used for all subsequent implementation. The browser stress engine, production CLI,
+report viewer, and integrations are not shipped yet.
 
 ## Packages
 
 - `@motionguard/core` — shared contracts and deterministic configuration primitives.
-- `@motionguard/cli` — command-line entry point.
-- `@motionguard/reporter` — sanitized machine-readable report generation.
+- `@motionguard/cli` — prerelease command-line boundary with truthful help/version output.
+- `@motionguard/reporter` — prerelease sanitized machine-readable serialization boundary.
 
 ## Development
 
@@ -32,7 +33,13 @@ pnpm install --frozen-lockfile
 pnpm qa
 ```
 
-Node.js 22 or newer is required.
+The release gate repeats the complete quality pass five times:
+
+```bash
+pnpm qa:repeat
+```
+
+Node.js 22.12.0 or newer is required.
 
 ## Governance
 
