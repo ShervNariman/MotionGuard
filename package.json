@@ -1,0 +1,33 @@
+{
+  "name": "motionguard-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Open-source animation stress testing for production UI motion.",
+  "license": "MIT",
+  "packageManager": "pnpm@11.12.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "clean": "pnpm -r clean && rm -rf coverage .motionguard",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:coverage": "pnpm -r test:coverage",
+    "package:check": "pnpm -r --workspace-concurrency=1 --if-present package:check",
+    "qa": "node scripts/qa-five-loops.mjs",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm package:check"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@biomejs/biome": "2.5.3",
+    "@types/node": "24.10.1",
+    "publint": "0.3.21",
+    "tsup": "8.5.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.10"
+  }
+}
