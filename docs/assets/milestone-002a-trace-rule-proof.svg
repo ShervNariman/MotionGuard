@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">MotionGuard trace and rule engine proof</title>
+  <desc id="desc">A controlled motion trace flows through four deterministic rules and produces an evidence-backed finding. Live browser adapter is next.</desc>
+  <rect width="1920" height="1080" fill="#090c10"/>
+  <rect x="64" y="56" width="1792" height="968" rx="34" fill="#12171e" stroke="#29313c" stroke-width="2"/>
+  <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
+    <text x="120" y="155" font-size="68" font-weight="750" fill="#f6f8fa">MotionGuard</text>
+    <text x="122" y="208" font-size="29" fill="#9ba6b2">Milestone 002A · Deterministic Trace &amp; Rule Engine</text>
+    <rect x="1490" y="105" width="278" height="62" rx="31" fill="#123b2b" stroke="#287454" stroke-width="2"/>
+    <circle cx="1530" cy="136" r="10" fill="#53e09d"/>
+    <text x="1557" y="145" font-size="23" font-weight="700" fill="#53e09d">MERGED</text>
+
+    <text x="120" y="294" font-size="34" font-weight="700" fill="#f6f8fa">Motion is data now—not just a final screenshot.</text>
+    <text x="120" y="340" font-size="25" fill="#6ea4ff">PR #4 · main · 471fdc6 · 42 tests · CI + CodeQL passed</text>
+
+    <rect x="120" y="395" width="405" height="405" rx="26" fill="#0d1218" stroke="#2c3541" stroke-width="2"/>
+    <text x="158" y="450" font-size="23" font-weight="700" fill="#9ba6b2">CONTROLLED TRACE</text>
+    <line x1="174" y1="522" x2="470" y2="522" stroke="#3b4654" stroke-width="4"/>
+    <g fill="#6ea4ff">
+      <circle cx="180" cy="522" r="10"/><circle cx="260" cy="522" r="10"/><circle cx="340" cy="522" r="10"/><circle cx="420" cy="522" r="10"/>
+    </g>
+    <path d="M180 660 C240 605, 290 625, 340 565 S430 520, 470 480" fill="none" stroke="#53e09d" stroke-width="6" stroke-linecap="round"/>
+    <rect x="160" y="700" width="325" height="58" rx="14" fill="#171e27"/>
+    <text x="184" y="737" font-size="22" fill="#f6f8fa">geometry · focus · state · time</text>
+
+    <path d="M550 598h92" stroke="#526070" stroke-width="5" stroke-linecap="round"/>
+    <path d="M626 580l22 18-22 18" fill="none" stroke="#526070" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <rect x="675" y="395" width="560" height="405" rx="26" fill="#0d1218" stroke="#2c3541" stroke-width="2"/>
+    <text x="714" y="450" font-size="23" font-weight="700" fill="#9ba6b2">FOUR EVIDENCE-BACKED RULES</text>
+    <g font-size="23" fill="#f6f8fa">
+      <rect x="714" y="490" width="482" height="62" rx="16" fill="#171e27"/><circle cx="746" cy="521" r="9" fill="#ff7f6e"/><text x="770" y="529">Moving interaction target</text>
+      <rect x="714" y="570" width="482" height="62" rx="16" fill="#171e27"/><circle cx="746" cy="601" r="9" fill="#ffc75f"/><text x="770" y="609">Interrupted-state mismatch</text>
+      <rect x="714" y="650" width="482" height="62" rx="16" fill="#171e27"/><circle cx="746" cy="681" r="9" fill="#c49cff"/><text x="770" y="689">Exited-but-interactive</text>
+      <rect x="714" y="730" width="482" height="62" rx="16" fill="#171e27"/><circle cx="746" cy="761" r="9" fill="#6ea4ff"/><text x="770" y="769">Reduced-motion mismatch</text>
+    </g>
+
+    <path d="M1260 598h92" stroke="#526070" stroke-width="5" stroke-linecap="round"/>
+    <path d="M1336 580l22 18-22 18" fill="none" stroke="#526070" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <rect x="1385" y="395" width="395" height="405" rx="26" fill="#0d1218" stroke="#2c3541" stroke-width="2"/>
+    <text x="1423" y="450" font-size="23" font-weight="700" fill="#9ba6b2">DETERMINISTIC FINDING</text>
+    <rect x="1423" y="490" width="319" height="212" rx="18" fill="#241717" stroke="#713c38" stroke-width="2"/>
+    <text x="1455" y="535" font-size="20" font-weight="700" fill="#ff8a7a">ERROR · HIGH CONFIDENCE</text>
+    <text x="1455" y="582" font-size="25" font-weight="700" fill="#f6f8fa">Target moved 24 px</text>
+    <text x="1455" y="620" font-size="20" fill="#c8d0d8">between pointer-down</text>
+    <text x="1455" y="650" font-size="20" fill="#c8d0d8">and pointer-up.</text>
+    <text x="1455" y="685" font-size="18" fill="#9ba6b2">frames 3–9 · 140 ms</text>
+    <rect x="1423" y="728" width="319" height="52" rx="14" fill="#123b2b"/>
+    <text x="1473" y="762" font-size="21" font-weight="700" fill="#53e09d">stable, replayable evidence</text>
+
+    <rect x="120" y="850" width="1660" height="104" rx="22" fill="#171e27" stroke="#2c3541" stroke-width="2"/>
+    <text x="158" y="896" font-size="24" font-weight="700" fill="#53e09d">SHIPPED:</text>
+    <text x="280" y="896" font-size="24" fill="#f6f8fa">controlled trace evaluation and four deterministic diagnostics</text>
+    <text x="158" y="931" font-size="24" font-weight="700" fill="#6ea4ff">NEXT:</text>
+    <text x="258" y="931" font-size="24" fill="#f6f8fa">live browser adapter · real webpage capture · adversarial fixtures</text>
+
+    <text x="120" y="994" font-size="21" fill="#9ba6b2">Break your animations before users do.</text>
+    <text x="1412" y="994" font-size="21" fill="#9ba6b2">github.com/ShervNariman/MotionGuard</text>
+  </g>
+</svg>
