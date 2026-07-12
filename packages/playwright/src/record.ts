@@ -276,6 +276,7 @@ export async function recordMotionTrace(
           await collect();
         }
       })();
+      void sampler.catch(() => undefined);
 
       await options.run?.({ page });
       await delay(scenario.settleMs, options.signal);

@@ -14,14 +14,15 @@ viewport changes, focus movement, page lifecycle changes, and reduced-motion pre
 
 ## Repository status
 
-MotionGuard is in active production development. The current repository establishes the strict
-workspace, public package boundaries, deterministic five-loop QA gate, CI, security policy, and
-agent governance used for all subsequent implementation.
+MotionGuard is in active prerelease development. The deterministic trace engine and four initial
+rules are implemented. The Playwright adapter records explicitly configured targets in an isolated
+browser context; the complete end-to-end CLI and polished report UI remain upcoming milestones.
 
 ## Packages
 
-- `@motionguard/core` — shared contracts and deterministic configuration primitives.
-- `@motionguard/cli` — command-line entry point.
+- `@motionguard/core` — bounded trace contracts and deterministic motion rules.
+- `@motionguard/playwright` — isolated real-browser capture for explicitly configured targets.
+- `@motionguard/cli` — command-line entry point under active development.
 - `@motionguard/reporter` — sanitized machine-readable report generation.
 
 ## Development

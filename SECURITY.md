@@ -20,5 +20,7 @@ MotionGuard may inspect untrusted pages and serialize page-derived data. Impleme
 - constrain filesystem writes to explicit output directories;
 - redact secrets and sensitive headers;
 - isolate browser contexts;
+- allow loopback origins by default and require exact allowlisting for remote/network origins;
+- block non-allowlisted HTTP(S) requests, downloads, and service workers during capture;
 - limit trace size, duration, concurrency, and network behavior;
 - clean up listeners, timers, contexts, and temporary files on success and failure.
