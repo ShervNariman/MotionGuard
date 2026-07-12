@@ -1,237 +1,45 @@
-packages/cli/src/config.ts:104:45 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+$ node scripts/qa-five-loops.mjs
 
-  i The computed expression can be simplified without the use of a string literal.
-  
-    102 │     rawScenarios.map((raw, index) => {
-    103 │       const scenario = objectValue(raw, `config.scenarios[${index}]`);
-  > 104 │       const actions = parseActions(scenario["actions"], `config.scenarios[${index}].actions`);
-        │                                             ^^^^^^^^^
-    105 │       return Object.freeze({ ...scenario, actions }) as MotionGuardCliScenario;
-    106 │     }),
-  
-  i Unsafe fix: Use a literal key instead.
-  
-    102 102 │       rawScenarios.map((raw, index) => {
-    103 103 │         const scenario = objectValue(raw, `config.scenarios[${index}]`);
-    104     │ - ······const·actions·=·parseActions(scenario["actions"],·`config.scenarios[${index}].actions`);
-        104 │ + ······const·actions·=·parseActions(scenario.actions,·`config.scenarios[${index}].actions`);
-    105 105 │         return Object.freeze({ ...scenario, actions }) as MotionGuardCliScenario;
-    106 106 │       }),
-  
+=== 1/5 Requirements ===
+Verified 8 governance files and mandatory controls.
 
-packages/cli/src/config.ts:108:26 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+=== 2/5 Static quality ===
+$ biome format .
+packages/cli/test/e2e/runner.test.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  i The computed expression can be simplified without the use of a string literal.
+  × Formatter would have printed the following content:
   
-    106 │     }),
-    107 │   );
-  > 108 │   const outputDir = root["outputDir"];
-        │                          ^^^^^^^^^^^
-    109 │   return Object.freeze({
-    110 │     schemaVersion: "0.1",
-  
-  i Unsafe fix: Use a literal key instead.
-  
-    106 106 │       }),
-    107 107 │     );
-    108     │ - ··const·outputDir·=·root["outputDir"];
-        108 │ + ··const·outputDir·=·root.outputDir;
-    109 109 │     return Object.freeze({
-    110 110 │       schemaVersion: "0.1",
+    13 13 │     server = createServer((_request, response) => {
+    14 14 │       response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+    15    │ - ····response.end(`<!doctype·html><html><body><button·data-target>Stable·target</button></body></html>`);
+       15 │ + ····response.end(
+       16 │ + ······`<!doctype·html><html><body><button·data-target>Stable·target</button></body></html>`,
+       17 │ + ····);
+    16 18 │     });
+    17 19 │     await new Promise<void>((resolve, reject) => {
+    ····· │ 
+    20 22 │     });
+    21 23 │     const address = server.address();
+    22    │ - ··if·(address·===·null·||·typeof·address·===·"string")·throw·new·Error("Could·not·resolve·fixture·port.");
+       24 │ + ··if·(address·===·null·||·typeof·address·===·"string")
+       25 │ + ····throw·new·Error("Could·not·resolve·fixture·port.");
+    23 26 │     baseUrl = `http://127.0.0.1:${String(address.port)}`;
+    24 27 │   });
   
 
-packages/cli/src/config.ts:113:24 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+Checked 60 files in 20ms. No fixes applied.
+Found 1 error.
+format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  i The computed expression can be simplified without the use of a string literal.
-  
-    111 │     outputDir:
-    112 │       outputDir === undefined ? ".motionguard" : stringValue(outputDir, "config.outputDir"),
-  > 113 │     includeTrace: root["includeTrace"] === true,
-        │                        ^^^^^^^^^^^^^^
-    114 │     scenarios,
-    115 │   });
-  
-  i Unsafe fix: Use a literal key instead.
-  
-    111 111 │       outputDir:
-    112 112 │         outputDir === undefined ? ".motionguard" : stringValue(outputDir, "config.outputDir"),
-    113     │ - ····includeTrace:·root["includeTrace"]·===·true,
-        113 │ + ····includeTrace:·root.includeTrace·===·true,
-    114 114 │       scenarios,
-    115 115 │     });
+  × Some errors were emitted while running checks.
   
 
-Checked 60 files in 50ms. No fixes applied.
-Found 10 infos.
-
-=== 2/5 Type safety ===
-$ pnpm -r typecheck
-Scope: 4 of 5 workspace projects
-packages/core typecheck$ tsc --noEmit
-packages/core typecheck: Done
-packages/playwright typecheck$ tsc --noEmit
-packages/reporter typecheck$ tsc --noEmit
-packages/reporter typecheck: Done
-packages/playwright typecheck: Done
-packages/cli typecheck$ tsc --noEmit
-packages/cli typecheck: Done
-
-=== 3/5 Automated behavior ===
-$ pnpm -r test
-Scope: 4 of 5 workspace projects
-packages/core test$ vitest run
-packages/core test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/core[39m
-packages/core test:  [32m✓[39m test/config.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-packages/core test:  [32m✓[39m test/rules/state-mismatch.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 13[2mms[22m[39m
-packages/core test:  [32m✓[39m test/trace.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 12[2mms[22m[39m
-packages/core test:  [32m✓[39m test/rules/moving-target.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 10[2mms[22m[39m
-packages/core test:  [32m✓[39m test/rules/reduced-motion.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 10[2mms[22m[39m
-packages/core test:  [32m✓[39m test/rules/engine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
-packages/core test:  [32m✓[39m test/rules/exited-interactive.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-packages/core test: [2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
-packages/core test: [2m      Tests [22m [1m[32m39 passed[39m[22m[90m (39)[39m
-packages/core test: [2m   Start at [22m 03:20:50
-packages/core test: [2m   Duration [22m 722ms[2m (transform 366ms, setup 0ms, import 611ms, tests 72ms, environment 1ms)[22m
-packages/core test: Done
-packages/playwright test$ vitest run --config vitest.config.ts
-packages/reporter test$ vitest run
-packages/reporter test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/reporter[39m
-packages/playwright test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/playwright[39m
-packages/reporter test:  [32m✓[39m test/reporter.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
-packages/reporter test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
-packages/reporter test: [2m      Tests [22m [1m[32m4 passed[39m[22m[90m (4)[39m
-packages/reporter test: [2m   Start at [22m 03:20:51
-packages/reporter test: [2m   Duration [22m 252ms[2m (transform 47ms, setup 0ms, import 63ms, tests 6ms, environment 0ms)[22m
-packages/playwright test:  [32m✓[39m test/unit/config.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-packages/playwright test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
-packages/playwright test: [2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
-packages/playwright test: [2m   Start at [22m 03:20:51
-packages/playwright test: [2m   Duration [22m 265ms[2m (transform 52ms, setup 0ms, import 73ms, tests 7ms, environment 0ms)[22m
-packages/reporter test: Done
-packages/playwright test: Done
-packages/cli test$ vitest run
-packages/cli test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/cli[39m
-packages/cli test:  [32m✓[39m test/cli.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 17[2mms[22m[39m
-packages/cli test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
-packages/cli test: [2m      Tests [22m [1m[32m11 passed[39m[22m[90m (11)[39m
-packages/cli test: [2m   Start at [22m 03:20:52
-packages/cli test: [2m   Duration [22m 744ms[2m (transform 155ms, setup 0ms, import 593ms, tests 17ms, environment 0ms)[22m
-packages/cli test: Done
-
-=== 4/5 Experience contract ===
-Verified accessibility, responsive, and interaction dimensions in core contracts.
-
-=== 5/5 Cleanup safety ===
-Verified guarded cleanup success and workspace-boundary refusal.
-
-=== 5/5 Build ===
-$ pnpm -r build
-Scope: 4 of 5 workspace projects
-packages/core build$ tsup src/index.ts --format esm,cjs --dts --sourcemap --clean
-packages/core build: [34mCLI[39m Building entry: src/index.ts
-packages/core build: [34mCLI[39m Using tsconfig: tsconfig.json
-packages/core build: [34mCLI[39m tsup v8.5.1
-packages/core build: [34mCLI[39m Target: es2022
-packages/core build: [34mCLI[39m Cleaning output folder
-packages/core build: [34mESM[39m Build start
-packages/core build: [34mCJS[39m Build start
-packages/core build: [32mESM[39m [1mdist/index.js     [22m[32m29.42 KB[39m
-packages/core build: [32mESM[39m [1mdist/index.js.map [22m[32m59.17 KB[39m
-packages/core build: [32mESM[39m ⚡️ Build success in 40ms
-packages/core build: [32mCJS[39m [1mdist/index.cjs     [22m[32m31.39 KB[39m
-packages/core build: [32mCJS[39m [1mdist/index.cjs.map [22m[32m60.77 KB[39m
-packages/core build: [32mCJS[39m ⚡️ Build success in 40ms
-packages/core build: [34mDTS[39m Build start
-packages/core build: [32mDTS[39m ⚡️ Build success in 1064ms
-packages/core build: [32mDTS[39m [1mdist/index.d.ts  [22m[32m7.60 KB[39m
-packages/core build: [32mDTS[39m [1mdist/index.d.cts [22m[32m7.60 KB[39m
-packages/core build: Done
-packages/playwright build$ tsup src/index.ts --format esm,cjs --dts --sourcemap --clean
-packages/reporter build$ tsup src/index.ts --format esm,cjs --dts --sourcemap --clean
-packages/reporter build: [34mCLI[39m Building entry: src/index.ts
-packages/reporter build: [34mCLI[39m Using tsconfig: tsconfig.json
-packages/reporter build: [34mCLI[39m tsup v8.5.1
-packages/reporter build: [34mCLI[39m Target: es2022
-packages/reporter build: [34mCLI[39m Cleaning output folder
-packages/reporter build: [34mESM[39m Build start
-packages/reporter build: [34mCJS[39m Build start
-packages/playwright build: [34mCLI[39m Building entry: src/index.ts
-packages/playwright build: [34mCLI[39m Using tsconfig: tsconfig.json
-packages/playwright build: [34mCLI[39m tsup v8.5.1
-packages/playwright build: [34mCLI[39m Target: es2022
-packages/playwright build: [34mCLI[39m Cleaning output folder
-packages/reporter build: [32mCJS[39m [1mdist/index.cjs     [22m[32m6.70 KB[39m
-packages/reporter build: [32mCJS[39m [1mdist/index.cjs.map [22m[32m9.07 KB[39m
-packages/reporter build: [32mCJS[39m ⚡️ Build success in 39ms
-packages/playwright build: [34mESM[39m Build start
-packages/playwright build: [34mCJS[39m Build start
-packages/reporter build: [32mESM[39m [1mdist/index.js     [22m[32m5.55 KB[39m
-packages/reporter build: [32mESM[39m [1mdist/index.js.map [22m[32m9.01 KB[39m
-packages/reporter build: [32mESM[39m ⚡️ Build success in 41ms
-packages/playwright build: [32mCJS[39m [1mdist/index.cjs     [22m[32m24.81 KB[39m
-packages/playwright build: [32mCJS[39m [1mdist/index.cjs.map [22m[32m46.12 KB[39m
-packages/playwright build: [32mCJS[39m ⚡️ Build success in 65ms
-packages/playwright build: [32mESM[39m [1mdist/index.js     [22m[32m23.63 KB[39m
-packages/playwright build: [32mESM[39m [1mdist/index.js.map [22m[32m45.59 KB[39m
-packages/playwright build: [32mESM[39m ⚡️ Build success in 65ms
-packages/reporter build: [34mDTS[39m Build start
-packages/playwright build: [34mDTS[39m Build start
-packages/reporter build: [32mDTS[39m ⚡️ Build success in 1603ms
-packages/reporter build: [32mDTS[39m [1mdist/index.d.ts  [22m[32m1.03 KB[39m
-packages/reporter build: [32mDTS[39m [1mdist/index.d.cts [22m[32m1.03 KB[39m
-packages/reporter build: Done
-packages/playwright build: [32mDTS[39m ⚡️ Build success in 2864ms
-packages/playwright build: [32mDTS[39m [1mdist/index.d.ts  [22m[32m2.91 KB[39m
-packages/playwright build: [32mDTS[39m [1mdist/index.d.cts [22m[32m2.91 KB[39m
-packages/playwright build: Done
-packages/cli build$ tsup src/index.ts src/bin.ts --format esm,cjs --dts --sourcemap --clean
-packages/cli build: [34mCLI[39m Building entry: src/bin.ts, src/index.ts
-packages/cli build: [34mCLI[39m Using tsconfig: tsconfig.json
-packages/cli build: [34mCLI[39m tsup v8.5.1
-packages/cli build: [34mCLI[39m Target: es2022
-packages/cli build: [34mCLI[39m Cleaning output folder
-packages/cli build: [34mESM[39m Build start
-packages/cli build: [34mCJS[39m Build start
-packages/cli build: ✘ [ERROR] Top-level await is currently not supported with the "cjs" output format
-packages/cli build:     src/bin.ts:5:19:
-packages/cli build:       5 │ process.exitCode = await runCli(process.argv.slice(2));
-packages/cli build:         ╵                    ~~~~~
-packages/cli build: [31mCJS[39m [31mBuild failed[39m
-packages/cli build: [31mError: Build failed with 1 error:
-packages/cli build: src/bin.ts:5:19: ERROR: Top-level await is currently not supported with the "cjs" output format
-packages/cli build:     at failureErrorWithLog (/home/runner/work/MotionGuard/MotionGuard/node_modules/.pnpm/esbuild@0.27.7/node_modules/esbuild/lib/main.js:1748:15)
-packages/cli build:     at /home/runner/work/MotionGuard/MotionGuard/node_modules/.pnpm/esbuild@0.27.7/node_modules/esbuild/lib/main.js:1207:25
-packages/cli build:     at runOnEndCallbacks (/home/runner/work/MotionGuard/MotionGuard/node_modules/.pnpm/esbuild@0.27.7/node_modules/esbuild/lib/main.js:1588:45)
-packages/cli build:     at buildResponseToResult (/home/runner/work/MotionGuard/MotionGuard/node_modules/.pnpm/esbuild@0.27.7/node_modules/esbuild/lib/main.js:1205:7)
-packages/cli build:     at /home/runner/work/MotionGuard/MotionGuard/node_modules/.pnpm/esbuild@0.27.7/node_modules/esbuild/lib/main.js:1232:16
-packages/cli build:     at responseCallbacks.<computed> (/home/runner/work/MotionGuard/MotionGuard/node_modules/.pnpm/esbuild@0.27.7/node_modules/esbuild/lib/main.js:884:9)
-packages/cli build:     at handleIncomingPacket (/home/runner/work/MotionGuard/MotionGuard/node_modules/.pnpm/esbuild@0.27.7/node_modules/esbuild/lib/main.js:939:12)
-packages/cli build:     at Socket.readFromStdout (/home/runner/work/MotionGuard/MotionGuard/node_modules/.pnpm/esbuild@0.27.7/node_modules/esbuild/lib/main.js:862:7)
-packages/cli build:     at Socket.emit (node:events:519:28)
-packages/cli build:     at addChunk (node:internal/streams/readable:561:12)[39m
-packages/cli build: [32mESM[39m [1mdist/bin.js                [22m[32m170.00 B[39m
-packages/cli build: [32mESM[39m [1mdist/index.js              [22m[32m216.00 B[39m
-packages/cli build: [32mESM[39m [1mdist/chunk-4CQ3OY23.js     [22m[32m10.78 KB[39m
-packages/cli build: [32mESM[39m [1mdist/bin.js.map            [22m[32m266.00 B[39m
-packages/cli build: [32mESM[39m [1mdist/index.js.map          [22m[32m71.00 B[39m
-packages/cli build: [32mESM[39m [1mdist/chunk-4CQ3OY23.js.map [22m[32m20.68 KB[39m
-packages/cli build: [32mESM[39m ⚡️ Build success in 39ms
-packages/cli build: [34mDTS[39m Build start
-packages/cli build: [32mDTS[39m ⚡️ Build success in 2628ms
-packages/cli build: [32mDTS[39m [1mdist/bin.d.ts    [22m[32m20.00 B[39m
-packages/cli build: [32mDTS[39m [1mdist/index.d.ts  [22m[32m1.45 KB[39m
-packages/cli build: [32mDTS[39m [1mdist/bin.d.cts   [22m[32m20.00 B[39m
-packages/cli build: [32mDTS[39m [1mdist/index.d.cts [22m[32m1.45 KB[39m
-packages/cli build: Failed
-/home/runner/work/MotionGuard/MotionGuard/packages/cli:
-[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @motionguard/cli@0.3.0 build: `tsup src/index.ts src/bin.ts --format esm,cjs --dts --sourcemap --clean`
-Exit status 1
 [ELIFECYCLE] Command failed with exit code 1.
 file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25
       else reject(new Error(`${command} ${args.join(" ")} exited with code ${String(code)}`));
                   ^
 
-Error: pnpm build exited with code 1
+Error: pnpm format:check exited with code 1
     at ChildProcess.<anonymous> (file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25:19)
     at ChildProcess.emit (node:events:519:28)
     at ChildProcess._handle.onexit (node:internal/child_process:293:12)
