@@ -53,6 +53,33 @@ describe("interrupted state mismatch rule", () => {
     expect(evaluateMotionGuardTrace(value).findings).toHaveLength(0);
   });
 
+  it("does not combine mismatch runs across declared-state changes", () => {
+    const visibleClosed = target({ state: { declared: "closed", phase: "idle" } });
+    const hiddenOpen = target({
+      visual: {
+        display: "block",
+        visibility: "visible",
+        opacity: 0,
+        pointerEvents: "auto",
+        transform: "none",
+      },
+      state: { declared: "open", phase: "idle" },
+    });
+    const value = trace(
+      [
+        frame(40, [visibleClosed]),
+        frame(80, [visibleClosed]),
+        frame(100, [hiddenOpen]),
+        frame(140, [hiddenOpen]),
+      ],
+      [
+        event("open", 0, "state-change", { stateValue: "open" }),
+        event("close", 40, "state-change", { stateValue: "closed" }),
+      ],
+    );
+    expect(evaluateMotionGuardTrace(value).findings).toHaveLength(0);
+  });
+
   it("does not label a static mismatch as an interruption", () => {
     const visibleClosed = target({ state: { declared: "closed", phase: "idle" } });
     const value = trace([frame(0, [visibleClosed]), frame(100, [visibleClosed])]);
