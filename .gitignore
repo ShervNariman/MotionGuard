@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+.motionguard/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/

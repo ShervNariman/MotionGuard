@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a reproducible MotionGuard defect.
+title: "bug: "
+labels: ["Bug"]
+body:
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Minimal repository, fixture, command, and deterministic steps.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and evidence
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: MotionGuard version or commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: OS, Node, browser, and framework
+    validations:
+      required: true
