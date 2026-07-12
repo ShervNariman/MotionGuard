@@ -26,7 +26,10 @@ jobs:
           pnpm --version
       - name: Restore reviewed adapter payload
         run: |
-          base64 --decode .bootstrap/playwright-adapter.tar.gz.b64 > /tmp/playwright-adapter.tar.gz
+          cat .bootstrap/playwright-adapter.part.* > /tmp/playwright-adapter.tar.gz.b64
+          echo "89c785f2262834f9057ad2c6330be5e39fcad09c8f141cfc620576311ab9fef6  /tmp/playwright-adapter.tar.gz.b64" | sha256sum --check
+          base64 --decode /tmp/playwright-adapter.tar.gz.b64 > /tmp/playwright-adapter.tar.gz
+          echo "3a7bcfe2f3f18da4b1433bfa89cb0405519c1322ae47f2a13d766345983e3a56  /tmp/playwright-adapter.tar.gz" | sha256sum --check
           tar -xzf /tmp/playwright-adapter.tar.gz
       - run: pnpm install --lockfile-only
       - run: pnpm install --frozen-lockfile
