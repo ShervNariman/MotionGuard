@@ -1,7 +1,7 @@
 {
   "name": "@motionguard/cli",
-  "version": "0.0.0",
-  "description": "Command-line interface for MotionGuard.",
+  "version": "0.3.0",
+  "description": "Command-line animation stress testing with MotionGuard.",
   "type": "module",
   "license": "MIT",
   "bin": {
@@ -29,11 +29,15 @@
     "clean": "node ../../scripts/clean.mjs dist coverage",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
     "test:coverage": "vitest run --coverage",
     "package:check": "publint && attw --pack"
   },
   "dependencies": {
-    "@motionguard/core": "workspace:*"
+    "@motionguard/core": "workspace:*",
+    "@motionguard/playwright": "workspace:*",
+    "@motionguard/reporter": "workspace:*",
+    "playwright": "1.61.1"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
