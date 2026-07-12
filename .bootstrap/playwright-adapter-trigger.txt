@@ -1,55 +1,58 @@
-$ vitest run --config vitest.e2e.config.ts
+$ node scripts/qa-five-loops.mjs
 
-[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/MotionGuard/MotionGuard/packages/playwright[39m
+=== 1/5 Requirements ===
+Verified 8 governance files and mandatory controls.
 
- [31m❯[39m test/e2e/record.test.ts [2m([22m[2m13 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 5408[2mms[22m[39m
-     [33m[2m✓[22m[39m detects a moving interaction target across five isolated runs [33m 1623[2mms[22m[39m
-     [33m[2m✓[22m[39m detects an interrupted state mismatch [33m 366[2mms[22m[39m
-     [32m✓[39m detects a visually exited target that stays interactive[32m 221[2mms[22m[39m
-     [32m✓[39m detects non-essential spatial movement under reduced motion[32m 231[2mms[22m[39m
-     [32m✓[39m blocks service workers inside the isolated context[32m 215[2mms[22m[39m
-     [32m✓[39m closes the context when the action fails[32m 72[2mms[22m[39m
-     [32m✓[39m times out and closes the context[32m 130[2mms[22m[39m
-     [32m✓[39m reports missing and duplicate targets and closes each context[32m 117[2mms[22m[39m
-     [32m✓[39m reports an unexpected page close and releases the context[32m 71[2mms[22m[39m
-     [33m[2m✓[22m[39m reports a Chromium page crash and releases the context [33m 1220[2mms[22m[39m
-[31m     [31m×[31m reports a browser disconnect without trying to retain its context[39m[32m 142[2mms[22m[39m
-     [32m✓[39m blocks non-allowlisted cross-origin network requests[32m 238[2mms[22m[39m
-     [32m✓[39m aborts and closes the context[32m 68[2mms[22m[39m
+=== 2/5 Static quality ===
+$ biome format .
+packages/playwright/src/record.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+  × Formatter would have printed the following content:
+  
+     64  64 │         if (browser.isConnected()) {
+     65  65 │           rejectWith(
+     66     │ - ··········new·MotionGuardPlaywrightError(
+     67     │ - ············"PAGE_CLOSED",
+     68     │ - ············"The·inspected·page·closed·unexpectedly.",
+     69     │ - ··········),
+         66 │ + ··········new·MotionGuardPlaywrightError("PAGE_CLOSED",·"The·inspected·page·closed·unexpectedly."),
+     70  67 │           );
+     71  68 │           return;
+     72  69 │         }
+     73  70 │         rejectWith(
+     74     │ - ········new·MotionGuardPlaywrightError(
+     75     │ - ··········"BROWSER_DISCONNECTED",
+     76     │ - ··········"The·browser·disconnected.",
+     77     │ - ········),
+         71 │ + ········new·MotionGuardPlaywrightError("BROWSER_DISCONNECTED",·"The·browser·disconnected."),
+     78  72 │         );
+     79  73 │       }, 25);
+     80  74 │     };
+     81  75 │     const onDisconnected = (): void =>
+     82     │ - ····rejectWith(
+     83     │ - ······new·MotionGuardPlaywrightError("BROWSER_DISCONNECTED",·"The·browser·disconnected."),
+     84     │ - ····);
+         76 │ + ····rejectWith(new·MotionGuardPlaywrightError("BROWSER_DISCONNECTED",·"The·browser·disconnected."));
+     85  77 │     page.once("crash", onCrash);
+     86  78 │     page.once("close", onClose);
+  
 
-[41m[1m FAIL [22m[49m test/e2e/record.test.ts[2m > [22mrecordMotionTrace[2m > [22mreports a browser disconnect without trying to retain its context
-[31m[1mAssertionError[22m: expected MotionGuardPlaywrightError: The inspected… { code: '…' } to match object { code: 'BROWSER_DISCONNECTED' }
-(2 matching properties omitted from actual)[39m
+Checked 56 files in 16ms. No fixes applied.
+Found 1 error.
+format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[32m- Expected[39m
-[31m+ Received[39m
+  × Some errors were emitted while running checks.
+  
 
-[32m- {[39m
-[32m-   "code": "BROWSER_DISCONNECTED",[39m
-[31m+ MotionGuardPlaywrightError {[39m
-[31m+   "code": "PAGE_CLOSED",[39m
-[2m  }[22m
+[ELIFECYCLE] Command failed with exit code 1.
+file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25
+      else reject(new Error(`${command} ${args.join(" ")} exited with code ${String(code)}`));
+                  ^
 
-[36m [2m❯[22m test/e2e/record.test.ts:[2m264:25[22m[39m
-    [90m262|[39m     })[33m;[39m
-    [90m263|[39m     [34msetTimeout[39m(() [33m=>[39m [35mvoid[39m disposableBrowser[33m.[39m[34mclose[39m()[33m,[39m [34m60[39m)[33m;[39m
-    [90m264|[39m     await expect(result).rejects.toMatchObject({ code: "BROWSER_DISCON…
-    [90m   |[39m                         [31m^[39m
-    [90m265|[39m     [34mexpect[39m(disposableBrowser[33m.[39m[34misConnected[39m())[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
-    [90m266|[39m   })[33m;[39m
+Error: pnpm format:check exited with code 1
+    at ChildProcess.<anonymous> (file:///home/runner/work/MotionGuard/MotionGuard/scripts/qa-five-loops.mjs:25:19)
+    at ChildProcess.emit (node:events:519:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:293:12)
 
-[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
-
-
-[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
-[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m12 passed[39m[22m[90m (13)[39m
-[2m   Start at [22m 02:06:48
-[2m   Duration [22m 5.98s[2m (transform 123ms, setup 0ms, import 471ms, tests 5.41s, environment 0ms)[22m
-
-
-::error file=/home/runner/work/MotionGuard/MotionGuard/packages/playwright/test/e2e/record.test.ts,title=test/e2e/record.test.ts > recordMotionTrace > reports a browser disconnect without trying to retain its context,line=264,column=25::AssertionError: expected MotionGuardPlaywrightError: The inspected… { code: '…' } to match object { code: 'BROWSER_DISCONNECTED' }%0A(2 matching properties omitted from actual)%0A%0A- Expected%0A+ Received%0A%0A- {%0A-   "code": "BROWSER_DISCONNECTED",%0A+ MotionGuardPlaywrightError {%0A+   "code": "PAGE_CLOSED",%0A  }%0A%0A ❯ test/e2e/record.test.ts:264:25%0A%0A
-/home/runner/work/MotionGuard/MotionGuard/packages/playwright:
-[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @motionguard/playwright@0.0.0 test:e2e: `vitest run --config vitest.e2e.config.ts`
-Exit status 1
+Node.js v22.23.1
+[ELIFECYCLE] Command failed with exit code 1.
