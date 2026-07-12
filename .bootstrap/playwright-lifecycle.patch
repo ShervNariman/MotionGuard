@@ -1,8 +1,59 @@
 diff --git a/packages/playwright/src/record.ts b/packages/playwright/src/record.ts
-index 3fdf53f..eacb240 100644
+index 3fdf53f..fca1413 100644
 --- a/packages/playwright/src/record.ts
 +++ b/packages/playwright/src/record.ts
-@@ -188,7 +188,8 @@ export async function recordMotionTrace(
+@@ -46,17 +46,36 @@ function lifecycleGuard(
+   dispose: () => void;
+ }> {
+   let rejectPromise: ((error: Error) => void) | undefined;
++  let closeTimer: ReturnType<typeof setTimeout> | undefined;
++  let settled = false;
+   const promise = new Promise<never>((_, reject) => {
+     rejectPromise = reject;
+   });
++  const rejectWith = (error: MotionGuardPlaywrightError): void => {
++    if (settled) return;
++    settled = true;
++    if (closeTimer !== undefined) clearTimeout(closeTimer);
++    rejectPromise?.(error);
++  };
+   const onCrash = (): void =>
+-    rejectPromise?.(new MotionGuardPlaywrightError("PAGE_CRASHED", "The inspected page crashed."));
+-  const onClose = (): void =>
+-    rejectPromise?.(
+-      new MotionGuardPlaywrightError("PAGE_CLOSED", "The inspected page closed unexpectedly."),
+-    );
++    rejectWith(new MotionGuardPlaywrightError("PAGE_CRASHED", "The inspected page crashed."));
++  const onClose = (): void => {
++    closeTimer = setTimeout(() => {
++      rejectWith(
++        browser.isConnected()
++          ? new MotionGuardPlaywrightError(
++              "PAGE_CLOSED",
++              "The inspected page closed unexpectedly.",
++            )
++          : new MotionGuardPlaywrightError(
++              "BROWSER_DISCONNECTED",
++              "The browser disconnected.",
++            ),
++      );
++    }, 25);
++  };
+   const onDisconnected = (): void =>
+-    rejectPromise?.(
++    rejectWith(
+       new MotionGuardPlaywrightError("BROWSER_DISCONNECTED", "The browser disconnected."),
+     );
+   page.once("crash", onCrash);
+@@ -65,6 +84,7 @@ function lifecycleGuard(
+   return Object.freeze({
+     promise,
+     dispose: () => {
++      if (closeTimer !== undefined) clearTimeout(closeTimer);
+       page.off("crash", onCrash);
+       page.off("close", onClose);
+       browser.off("disconnected", onDisconnected);
+@@ -188,7 +208,8 @@ export async function recordMotionTrace(
      });
  
      const page = await Promise.race([context.newPage(), ...guards.promises]);
@@ -12,7 +63,7 @@ index 3fdf53f..eacb240 100644
  
      const work = async (): Promise<MotionGuardTrace> => {
        try {
-@@ -198,6 +199,18 @@ export async function recordMotionTrace(
+@@ -198,6 +219,18 @@ export async function recordMotionTrace(
          });
        } catch (error) {
          if (error instanceof MotionGuardPlaywrightError) throw error;
@@ -31,7 +82,7 @@ index 3fdf53f..eacb240 100644
          throw new MotionGuardPlaywrightError(
            "NAVIGATION_FAILED",
            `Navigation failed for ${scenario.url}.`,
-@@ -270,9 +283,24 @@ export async function recordMotionTrace(
+@@ -270,9 +303,24 @@ export async function recordMotionTrace(
        });
      };
  
