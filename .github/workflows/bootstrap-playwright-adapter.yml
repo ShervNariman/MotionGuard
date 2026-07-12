@@ -71,6 +71,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md SECURITY.md .github/workflows/browser-e2e.yml docs/architecture/0003-playwright-capture-boundary.md reports/002b-playwright-adapter.md packages/playwright pnpm-lock.yaml
+          git add README.md SECURITY.md docs/architecture/0003-playwright-capture-boundary.md reports/002b-playwright-adapter.md packages/playwright pnpm-lock.yaml
           git diff --cached --quiet || git commit -m "add isolated Playwright capture adapter"
           git push origin HEAD:agent/playwright-adapter
