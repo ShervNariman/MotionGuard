@@ -5,6 +5,7 @@ import type { MotionGuardPlaywrightScenario } from "@motionguard/playwright";
 const MAX_SCENARIOS = 100;
 const MAX_ACTIONS = 100;
 const MAX_STRING = 512;
+const MAX_WAIT_MS = 60_000;
 
 export type MotionGuardCliAction =
   | Readonly<{ type: "click"; selector: string }>
@@ -40,9 +41,15 @@ function stringValue(value: unknown, label: string): string {
   return value;
 }
 
-function integerValue(value: unknown, label: string, minimum = 0): number {
-  if (typeof value !== "number" || !Number.isInteger(value) || value < minimum) {
-    fail(`${label} must be an integer greater than or equal to ${minimum}.`);
+function integerValue(value: unknown, label: string, minimum = 0, maximum?: number): number {
+  if (
+    typeof value !== "number" ||
+    !Number.isInteger(value) ||
+    value < minimum ||
+    (maximum !== undefined && value > maximum)
+  ) {
+    const upperBound = maximum === undefined ? "" : ` and at most ${maximum}`;
+    fail(`${label} must be an integer greater than or equal to ${minimum}${upperBound}.`);
   }
   return value;
 }
@@ -57,7 +64,10 @@ function parseActions(value: unknown, label: string): readonly MotionGuardCliAct
       const action = objectValue(raw, `${label}[${index}]`);
       const type = stringValue(action.type, `${label}[${index}].type`);
       if (type === "wait") {
-        return Object.freeze({ type, ms: integerValue(action.ms, `${label}[${index}].ms`, 1) });
+        return Object.freeze({
+          type,
+          ms: integerValue(action.ms, `${label}[${index}].ms`, 1, MAX_WAIT_MS),
+        });
       }
       if (type === "click" || type === "hover") {
         return Object.freeze({
@@ -80,7 +90,11 @@ function parseActions(value: unknown, label: string): readonly MotionGuardCliAct
 export function parseCliConfig(value: unknown): MotionGuardCliConfig {
   const root = objectValue(value, "config");
   if (root.schemaVersion !== "0.1") fail('config.schemaVersion must be "0.1".');
-  if (!Array.isArray(root.scenarios) || root.scenarios.length === 0 || root.scenarios.length > MAX_SCENARIOS) {
+  if (
+    !Array.isArray(root.scenarios) ||
+    root.scenarios.length === 0 ||
+    root.scenarios.length > MAX_SCENARIOS
+  ) {
     fail(`config.scenarios must contain 1–${MAX_SCENARIOS} entries.`);
   }
   const scenarios = Object.freeze(
