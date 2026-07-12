@@ -21,13 +21,27 @@ function help(): string {
 }
 
 function optionValue(args: readonly string[], short: string, long: string): string | undefined {
-  const index = args.findIndex((arg) => arg === short || arg === long);
-  if (index === -1) return undefined;
-  const value = args[index + 1];
+  const indexes = args
+    .map((arg, index) => (arg === short || arg === long ? index : -1))
+    .filter((index) => index >= 0);
+  if (indexes.length === 0) return undefined;
+  if (indexes.length > 1) throw new TypeError(`${long} may only be provided once.`);
+  const value = args[indexes[0]! + 1];
   if (value === undefined || value.startsWith("-")) {
     throw new TypeError(`${long} requires a value.`);
   }
   return value;
+}
+
+function validateCheckArgs(args: readonly string[]): void {
+  const options = new Set(["-c", "--config", "-o", "--output", "-f", "--format"]);
+  for (let index = 1; index < args.length; index += 1) {
+    const arg = args[index]!;
+    if (!options.has(arg)) throw new TypeError(`Unknown option: ${arg}`);
+    const value = args[index + 1];
+    if (value === undefined || value.startsWith("-")) throw new TypeError(`${arg} requires a value.`);
+    index += 1;
+  }
 }
 
 function parseFormat(value: string | undefined): MotionGuardOutputFormat {
@@ -49,6 +63,7 @@ export async function runCli(args: readonly string[], io: CliIo = defaultIo): Pr
   try {
     const command = args[0];
     if (command === "init") {
+      if (args.length > 2) throw new TypeError(`Unknown argument: ${args[2] ?? ""}`);
       const path = resolve(args[1] ?? "motionguard.config.json");
       try {
         await access(path);
@@ -64,6 +79,7 @@ export async function runCli(args: readonly string[], io: CliIo = defaultIo): Pr
       throw new TypeError(`Unknown command: ${command ?? ""}`);
     }
 
+    validateCheckArgs(args);
     const configPath = optionValue(args, "-c", "--config") ?? "motionguard.config.json";
     const outputDir = optionValue(args, "-o", "--output");
     const format = parseFormat(optionValue(args, "-f", "--format"));
