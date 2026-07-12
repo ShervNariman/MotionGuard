@@ -1,0 +1,49 @@
+--- a/packages/playwright/src/record.ts
++++ b/packages/playwright/src/record.ts
+@@ -139,6 +139,7 @@
+   throwIfAborted(options.signal);
+ 
+   let context: BrowserContext | undefined;
++  let page: Page | undefined;
+   let lifecycle: ReturnType<typeof lifecycleGuard> | undefined;
+   let guards: ReturnType<typeof executionGuards> | undefined;
+   let primaryError: unknown;
+@@ -187,7 +188,7 @@
+       await route.continue();
+     });
+ 
+-    const page = await Promise.race([context.newPage(), ...guards.promises]);
++    page = await Promise.race([context.newPage(), ...guards.promises]);
+     lifecycle = lifecycleGuard(options.browser, page);
+ 
+     const work = async (): Promise<MotionGuardTrace> => {
+@@ -272,7 +273,28 @@
+ 
+     result = await Promise.race([work(), lifecycle.promise, ...guards.promises]);
+   } catch (error) {
+-    primaryError = error;
++    if (
++      error instanceof MotionGuardPlaywrightError &&
++      (error.code === "BROWSER_DISCONNECTED" ||
++        error.code === "PAGE_CLOSED" ||
++        error.code === "PAGE_CRASHED")
++    ) {
++      primaryError = error;
++    } else if (!options.browser.isConnected()) {
++      primaryError = new MotionGuardPlaywrightError(
++        "BROWSER_DISCONNECTED",
++        "The browser disconnected.",
++        error,
++      );
++    } else if (page?.isClosed() === true) {
++      primaryError = new MotionGuardPlaywrightError(
++        "PAGE_CLOSED",
++        "The inspected page closed unexpectedly.",
++        error,
++      );
++    } else {
++      primaryError = error;
++    }
+   }
+ 
+   stopSampling = true;
