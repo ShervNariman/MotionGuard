@@ -37,7 +37,7 @@
     "@motionguard/core": "workspace:*",
     "@motionguard/playwright": "workspace:*",
     "@motionguard/reporter": "workspace:*",
-    "playwright": "1.61.1"
+    "playwright": "1.62.0"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
